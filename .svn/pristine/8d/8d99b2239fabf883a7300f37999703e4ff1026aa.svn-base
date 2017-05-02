@@ -1,0 +1,205 @@
+package com.allen.web.model;
+
+import java.util.Date;
+
+public class CustomerInfo {
+    private String customerId;
+
+    private String name;
+
+    private String sex;
+
+    private String mobile;
+
+    private String province;
+
+    private String city;
+
+    private String address;
+
+    private String email;
+
+    private String certType;
+
+    private String certificateNo;
+
+    private String birthday;
+
+    private String policyNo;
+
+    private String isPrecheck;
+
+    private String customerType;
+
+    private String company;
+
+    private String fellowId;
+
+    private String isValid;
+
+    private String isTs;
+
+    private String createUserId;
+
+    private Date createTime;
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId == null ? null : customerId.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex == null ? null : sex.trim();
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public String getCertType() {
+        return certType;
+    }
+
+    public void setCertType(String certType) {
+        this.certType = certType == null ? null : certType.trim();
+    }
+
+    public String getCertificateNo() {
+        return certificateNo;
+    }
+
+    public void setCertificateNo(String certificateNo) {
+        this.certificateNo = certificateNo == null ? null : certificateNo.trim();
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday == null ? null : birthday.trim();
+    }
+
+    public String getPolicyNo() {
+        return policyNo;
+    }
+
+    public void setPolicyNo(String policyNo) {
+        this.policyNo = policyNo == null ? null : policyNo.trim();
+    }
+
+    public String getIsPrecheck() {
+        return isPrecheck;
+    }
+
+    public void setIsPrecheck(String isPrecheck) {
+        this.isPrecheck = isPrecheck == null ? null : isPrecheck.trim();
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType == null ? null : customerType.trim();
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company == null ? null : company.trim();
+    }
+
+    public String getFellowId() {
+        return fellowId;
+    }
+
+    public void setFellowId(String fellowId) {
+        this.fellowId = fellowId == null ? null : fellowId.trim();
+    }
+
+    public String getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(String isValid) {
+        this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public String getIsTs() {
+        return isTs;
+    }
+
+    public void setIsTs(String isTs) {
+        this.isTs = isTs == null ? null : isTs.trim();
+    }
+
+    public String getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId == null ? null : createUserId.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+}

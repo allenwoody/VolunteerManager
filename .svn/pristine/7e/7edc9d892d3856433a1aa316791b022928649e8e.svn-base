@@ -1,0 +1,117 @@
+package com.allen.web.controller;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+
+import com.allen.core.common.Const;
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericController;
+import com.allen.web.model.Company;
+import com.allen.web.model.CompanyActivity;
+import com.allen.web.model.DbInfo;
+import com.allen.web.model.HomepageFile;
+import com.allen.web.service.company.CompanyActivityService;
+import com.allen.web.service.company.CompanyService;
+import com.allen.web.service.dbinfo.DbInfoService;
+import com.allen.web.service.homepagefile.HomepageFileService;
+
+
+/**
+ * 公共视图控制器
+ * 
+ * @author wenquan
+ * @since 2015年7月29日17:32:44
+ **/
+@Controller
+public class CommonController extends GenericController{
+	
+	@Resource
+	DbInfoService dbInfoService;
+	@Resource
+	HomepageFileService homepageFileService;
+	@Resource
+	CompanyService companyService;
+	@Resource
+	CompanyActivityService companyActivityService;
+
+    /**
+     * 首页
+     * 
+     * @param map
+     * @param request
+     * @return
+     */
+    @RequestMapping("/index")
+    public String adminIndex(ModelMap map, HttpServletRequest request) {
+    	List<DbInfo> dbInfoList = this.dbInfoService.selectList();
+    	map.put("dbInfoList", dbInfoList);
+    	String pageNo = request.getParameter("pageNo");
+    	if(!StringUtils.isNotBlank(pageNo))
+		{
+			pageNo = "1";
+		}
+		Page<HomepageFile> page = new Page<>(Integer.parseInt(pageNo),Const.PAGE_SIZE);
+		HomepageFile homepageFile = new HomepageFile();
+		String fileNameSearch = request.getParameter("fileNameSearch");
+		homepageFile.setRealName(fileNameSearch);
+		List<HomepageFile> homepageFileList = this.homepageFileService.selectList(page,homepageFile);
+		
+		/*合作公司信息*/
+		List<Company> companyList = this.companyService.selectList();
+		Map<Company, List<CompanyActivity>> companyMap = new LinkedHashMap<>();
+		//控制活动显示个数
+		for (Company company : companyList) {
+			List<CompanyActivity> companyActivity = this.companyActivityService.selectActivityBycompanyId(company.getCompanyId());
+			if(companyActivity.size()>3){
+				for(int i=3;i<companyActivity.size();i++){
+					companyActivity.remove(i);
+				}
+			}
+			companyMap.put(company, companyActivity);
+		}
+		map.put("companyMap", companyMap);
+		map.put("homepageFileList", homepageFileList);
+		map.put("page",page);
+		map.put("homepageFile", homepageFile);
+        return "/index";
+    }
+
+    @RequestMapping("/setPassword")
+	public String setPassword(ModelMap map) {
+		map.put("userId", this.getLoginUser().getUserId());
+		return "/setPassword";
+	}
+    
+    @RequestMapping("/lang")
+    @ResponseBody
+    public String lang(HttpServletRequest request,HttpServletResponse response) {
+            String langType = request.getParameter("langType");
+            if (langType.equals("zh")) {
+                Locale locale = new Locale("zh", "CN");
+                //request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+                new CookieLocaleResolver().setLocale(request, response, locale);
+            } else if (langType.equals("en")) {
+                Locale locale = new Locale("en", "US");
+                //request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+                new CookieLocaleResolver().setLocale(request, response, locale);
+            } else
+            	new CookieLocaleResolver().setLocale(request, response, LocaleContextHolder.getLocale());
+                //request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, LocaleContextHolder.getLocale());
+            return null;
+    }
+}

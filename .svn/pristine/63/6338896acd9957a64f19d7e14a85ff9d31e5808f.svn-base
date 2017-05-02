@@ -1,0 +1,49 @@
+package com.allen.web.service.homepagefile;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.HomepageFileMapper;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.CompanyExample;
+import com.allen.web.model.HomepageFile;
+import com.allen.web.model.HomepageFileExample;
+import com.allen.web.model.HomepageFileExample.Criteria;
+import com.hundsun.jresplus.common.util.StringUtil;
+
+@Service
+public class HomepageFileServiceImpl extends GenericServiceImpl<HomepageFile,String> implements HomepageFileService{
+	@Resource
+	HomepageFileMapper homepageFileMapper;
+	
+	@Override
+	public GenericDao<HomepageFile, String> getDao() {
+		return this.homepageFileMapper;
+	}
+
+	@Override
+	public List<HomepageFile> selectList(Page<HomepageFile> page, HomepageFile homepageFile) {
+		HomepageFileExample example = new HomepageFileExample();
+		Criteria criteria = example.createCriteria();
+		if(StringUtil.isNotBlank(homepageFile.getRealName())){
+			criteria.andRealNameLike("%"+homepageFile.getRealName()+"%");
+		}
+		criteria.andIsvalidEqualTo(EnumBool.YES.getCode());
+		return this.homepageFileMapper.selectByExample(example,page);
+	}
+
+	@Override
+	public int deleteFile(String id) {
+		HomepageFile homepageFile = new HomepageFile();
+		homepageFile.setId(id);
+		homepageFile.setIsvalid(EnumBool.NO.getCode());
+		return this.homepageFileMapper.updateByPrimaryKeySelective(homepageFile);
+	}
+
+}

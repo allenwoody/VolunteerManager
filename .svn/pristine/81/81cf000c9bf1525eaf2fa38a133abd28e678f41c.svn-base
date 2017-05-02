@@ -1,0 +1,50 @@
+package com.allen.web.service.consumption;
+
+import java.util.List;
+
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.Consumption;
+import com.allen.web.model.ConsumptionVo;
+
+/**
+ * 
+* @ClassName: ConsumptionService 
+* @Description: 消费记录Service接口 
+* @author wenquan
+* @date 2016年7月25日 下午3:17:52 
+*
+ */
+public interface ConsumptionService extends GenericService<Consumption, String> {
+	/**
+	 * 
+	* @Title: selectConsumptionByCustomer 
+	* @Description: 按客户查询消费记录 
+	* @param @param customerId
+	* @param @return    设定文件 
+	* @return List<Consumption>    返回类型 
+	* @throws
+	 */
+	public List<Consumption> selectConsumptionByCustomer(String customerId);
+	
+	/**
+	 * 
+	* @Title: selectLastConsumptionDate 
+	* @Description: 查询客户的最后一次就诊记录 
+	* @param @param customerId
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public Consumption selectLastConsumptionDate(String customerId);
+	
+	/**
+	 * @return TODO
+	 * 
+	* @Title: insertConsumptionInfo 
+	* @Description: 插入新的消费记录 
+	* @param @param voList    设定文件 
+	* @return void    返回类型 
+	* @throws
+	 */
+	public int insertConsumptionInfo(List<ConsumptionVo> voList);
+}

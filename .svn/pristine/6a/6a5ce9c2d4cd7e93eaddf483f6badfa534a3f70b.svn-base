@@ -1,0 +1,42 @@
+package com.allen.web.dao;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.CardInfo;
+import com.allen.web.model.CardInfoExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 
+* @ClassName: CardInfoMapper 
+* @Description: 卡信息Mapper
+* @author wenquan
+* @date 2016年6月23日 上午9:15:37 
+*
+ */
+public interface CardInfoMapper extends GenericDao<CardInfo, String>{
+    int countByExample(CardInfoExample example);
+
+    int deleteByExample(CardInfoExample example);
+
+    int deleteByPrimaryKey(String cardId);
+
+    int insert(CardInfo record);
+
+    int insertSelective(CardInfo record);
+
+    List<CardInfo> selectByExample(CardInfoExample example);
+
+    List<CardInfo> selectByExample(CardInfoExample example, Page<CardInfo> page);
+
+    CardInfo selectByPrimaryKey(String cardId);
+
+    int updateByExampleSelective(@Param("record") CardInfo record, @Param("example") CardInfoExample example);
+
+    int updateByExample(@Param("record") CardInfo record, @Param("example") CardInfoExample example);
+
+    int updateByPrimaryKeySelective(CardInfo record);
+
+    int updateByPrimaryKey(CardInfo record);
+}

@@ -1,0 +1,39 @@
+package com.allen.web.dao;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.AuditNode;
+import com.allen.web.model.AuditNodeExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 
+* @ClassName: AuditNodeMapper 
+* @Description: 审批节点Mapper 
+* @author wenquan
+* @date 2016年8月5日 下午5:25:20 
+*
+ */
+public interface AuditNodeMapper extends GenericDao<AuditNode, String>{
+    int countByExample(AuditNodeExample example);
+
+    int deleteByExample(AuditNodeExample example);
+
+    int deleteByPrimaryKey(String nodeId);
+
+    int insert(AuditNode record);
+
+    int insertSelective(AuditNode record);
+
+    List<AuditNode> selectByExample(AuditNodeExample example);
+
+    AuditNode selectByPrimaryKey(String nodeId);
+
+    int updateByExampleSelective(@Param("record") AuditNode record, @Param("example") AuditNodeExample example);
+
+    int updateByExample(@Param("record") AuditNode record, @Param("example") AuditNodeExample example);
+
+    int updateByPrimaryKeySelective(AuditNode record);
+
+    int updateByPrimaryKey(AuditNode record);
+}

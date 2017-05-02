@@ -1,0 +1,17 @@
+# \u6570\u636e\u5e93\u9a71\u52a8jar \u8def\u5f84
+#drive.class.path=D:/workspace/OffcialWebsite/WebContent/WEB-INF/lib/mysql-connector-java-5.1.35.jar
+drive.class.path=D:/workspace/OfficialWebsite/WebContent/WEB-INF/lib/jtds-1.2.jar
+# \u6570\u636e\u5e93\u8fde\u63a5\u53c2\u6570
+#jdbc.driver=com.mysql.jdbc.Driver
+#jdbc.url=jdbc:mysql://127.0.0.1:3306/sms
+jdbc.driver=net.sourceforge.jtds.jdbc.Driver
+jdbc.url=jdbc:jtds:sqlserver://192.168.1.36:1433/Insurance
+jdbc.username=sa
+jdbc.password=123
+
+# \u5305\u8def\u5f84\u914d\u7f6e
+model.package=com.allen.web.model
+dao.package=com.allen.web.dao
+xml.mapper.package=com.allen.web.dao
+
+target.project=Insurance/src

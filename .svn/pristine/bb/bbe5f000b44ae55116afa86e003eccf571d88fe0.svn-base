@@ -1,0 +1,73 @@
+package com.allen.web.model;
+
+public class CardSample {
+    private String projectId;
+
+    private String projectName;
+
+    private String cardImage;
+
+    private String activeContent;
+
+    private String isValid;
+
+    private String compactiid;
+
+    private String compactiname;
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId == null ? null : projectId.trim();
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName == null ? null : projectName.trim();
+    }
+
+    public String getCardImage() {
+        return cardImage;
+    }
+
+    public void setCardImage(String cardImage) {
+        this.cardImage = cardImage == null ? null : cardImage.trim();
+    }
+
+    public String getActiveContent() {
+        return activeContent;
+    }
+
+    public void setActiveContent(String activeContent) {
+        this.activeContent = activeContent == null ? null : activeContent.trim();
+    }
+
+    public String getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(String isValid) {
+        this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public String getCompactiid() {
+        return compactiid;
+    }
+
+    public void setCompactiid(String compactiid) {
+        this.compactiid = compactiid == null ? null : compactiid.trim();
+    }
+
+    public String getCompactiname() {
+        return compactiname;
+    }
+
+    public void setCompactiname(String compactiname) {
+        this.compactiname = compactiname == null ? null : compactiname.trim();
+    }
+}

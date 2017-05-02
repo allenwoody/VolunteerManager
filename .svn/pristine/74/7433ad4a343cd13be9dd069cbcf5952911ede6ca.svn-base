@@ -1,0 +1,288 @@
+package com.allen.web.service.card;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.core.util.ApplicationUtils;
+import com.allen.web.dao.CardInfoMapper;
+import com.allen.web.dao.CardItemMapper;
+import com.allen.web.dao.CardSampleMapper;
+import com.allen.web.enums.EnumAuditCategory;
+import com.allen.web.enums.EnumAuditState;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.enums.EnumCardState;
+import com.allen.web.enums.EnumCardType;
+import com.allen.web.model.AuditTask;
+import com.allen.web.model.CardInfo;
+import com.allen.web.model.CardInfoExample;
+import com.allen.web.model.CardInfoExample.Criteria;
+import com.allen.web.model.CardItem;
+import com.allen.web.model.CardItemExample;
+import com.allen.web.model.CardSample;
+import com.allen.web.model.CardSampleExample;
+import com.allen.web.model.CustomerInfo;
+import com.allen.web.model.ProjectItem;
+import com.allen.web.model.UserInSession;
+import com.allen.web.service.audit.AuditTaskService;
+import com.allen.web.service.customer.CustomerService;
+import com.hundsun.jresplus.common.util.StringUtil;
+
+/**
+ * 
+* @ClassName: CardInfoServiceImpl 
+* @Description: 卡信息Service实现类 
+* @author wenquan
+* @date 2016年7月25日 下午3:22:53 
+*
+ */
+@Service
+public class CardInfoServiceImpl extends GenericServiceImpl<CardInfo, String> implements CardInfoService {
+	
+	private final static Logger logger = LoggerFactory.getLogger(CardInfoServiceImpl.class);
+	
+	@Resource
+	CardInfoMapper cardInfoMapper;
+	@Resource
+	CustomerService customerService;
+	@Resource
+	ProjectItemService projectItemService;
+	@Resource
+	CardItemMapper cardItemMapper;
+	@Resource
+	AuditTaskService auditTaskService;
+	@Resource
+	CardSampleMapper cardSampleMapper;
+	@Resource
+	CardSampleService cardSampleService;
+	
+	@Override
+	public List<CardInfo> selectList(Page<CardInfo> page) {
+		CardInfoExample example = new CardInfoExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
+		return this.cardInfoMapper.selectByExample(example, page);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CardInfo> selectList(Page<CardInfo> page, String name, CardInfo cardInfo) {
+		CardInfoExample example = new CardInfoExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIsValidEqualTo(EnumBool.YES.getCode());
+		if (StringUtil.isNotBlank(name)) {//按客户姓名拼接查询条件
+			List<CustomerInfo> list = this.customerService.selectCustomerByName(name);
+			if (list.isEmpty()) {
+				return ListUtils.EMPTY_LIST;
+			}else {
+				List<String> customerIdList = new ArrayList<>();
+				for (CustomerInfo customerInfo : list) {
+					customerIdList.add(customerInfo.getCustomerId());
+				}
+				criteria.andCustomerIdIn(customerIdList);
+			}
+		}
+		if (StringUtil.isNotBlank(cardInfo.getCardNo())) {//按卡号拼接查询条件
+			criteria.andCardNoLike("%"+cardInfo.getCardNo()+"%");
+		}
+		if (StringUtil.isNotBlank(cardInfo.getPolicyNo())) {//按保单号拼接查询条件
+			criteria.andPolicyNoLike("%"+cardInfo.getPolicyNo()+"%");
+		}
+		example.setOrderByClause("project_name, customer_id, card_state");
+		return this.cardInfoMapper.selectByExample(example, page);
+	}
+	
+	
+
+	@Override
+	public int insert(CardInfo model, UserInSession userInSession) {
+		int i = super.insert(model);
+		String cardId = model.getCardId();
+		List<ProjectItem> piList = this.projectItemService.getProjectItemInfo(model.getProjectId());
+		//插入卡-项目关系表
+		CardItem cardItem = new CardItem();
+		for (ProjectItem projectItem : piList) {
+			cardItem.setCiId(ApplicationUtils.randomUUID());
+			cardItem.setCardId(cardId);
+			cardItem.setItemId(projectItem.getItemId());
+			cardItem.setTotalCount(projectItem.getTotalCount());
+			cardItem.setUsedCount(0L);
+			i=i+this.cardItemMapper.insert(cardItem);
+		}
+		//此处不再直接提交审核，改为需要操作员确认无误后主动提交审核
+		return i;
+	}
+
+	@Override
+	public int delete(String id) {
+		CardInfo record = new CardInfo();
+		record.setCardId(id);
+		record.setIsValid(EnumBool.NO.getCode());
+		CardItemExample example = new CardItemExample();
+		example.createCriteria().andCardIdEqualTo(id);
+		return this.cardItemMapper.deleteByExample(example)+this.cardInfoMapper.updateByPrimaryKeySelective(record);
+	}
+	
+	@Override
+	public List<CardInfo> selectByCustomer(String customerId) {
+		CardInfoExample example = new CardInfoExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode()).andCustomerIdEqualTo(customerId).andAuditStateEqualTo(EnumAuditState.PASS.getCode()).andCardStateNotEqualTo(EnumCardState.WRITE_OFF.getCode());//TODO 关于卡状态判断，后续或许有变化
+		return this.cardInfoMapper.selectByExample(example );
+	}
+
+	@Override
+	public GenericDao<CardInfo, String> getDao() {
+		return this.cardInfoMapper;
+	}
+
+	@Override
+	public int submitAuditTask(List<String> cardIdList, UserInSession userInSession) {
+		int i = 0;
+		CardInfo cardInfo = new CardInfo();
+		for (String cardId : cardIdList) {
+			cardInfo.setCardId(cardId);
+			cardInfo.setAuditState(EnumAuditState.VERIFYING.getCode());
+			this.update(cardInfo);
+			/*插入审批记录*/
+			AuditTask auditTask = new AuditTask();
+			auditTask.setTaskId(ApplicationUtils.randomUUID());
+			auditTask.setTaskName(EnumAuditCategory.CARD.getMsg());
+			auditTask.setRootId(cardId);
+			auditTask.setCreateDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+			auditTask.setCreateUserId(userInSession.getUserId());
+			auditTask.setCreateUserName(userInSession.getUsername());
+			auditTask.setDescription("卡信息审批");
+			auditTask.setTaskState(EnumAuditState.VERIFYING.getCode());
+			auditTask.setCategory(EnumAuditCategory.CARD.getCode());
+			try {
+				i = i + this.auditTaskService.createAuditTask(auditTask);
+			} catch (Exception e) {
+				logger.info("卡信息审批任务创建失败");
+			}
+		}
+		return i;
+	}
+
+	@Override
+	public String insertByExcel(List<Map> map,UserInSession userInSession) {
+		int num = 2;
+		StringBuffer message = new StringBuffer();
+		for(Map cardInfos:map){
+			String project_name = cardInfos.get("项目名称").toString();
+			if(StringUtils.isBlank(project_name)){
+				message.append(" 第"+num+"行，项目名称不能为空");
+				continue;
+			}
+			String start_date = cardInfos.get("开始时间").toString();
+			if(StringUtils.isBlank(project_name)){
+				message.append(" 第"+num+"行，开始时间不能为空");
+				continue;
+			}
+			String finish_date = cardInfos.get("结束时间").toString();
+			if(StringUtils.isBlank(project_name)){
+				message.append(" 第"+num+"行，结束时间不能为空");
+				continue;
+			}
+			String card_no = cardInfos.get("卡号").toString();
+			if(StringUtils.isBlank(project_name)){
+				message.append(" 第"+num+"行，卡号不能为空");
+				continue;
+			}
+			String policy_no = cardInfos.get("保单号").toString();
+			if(StringUtils.isBlank(project_name)){
+				message.append(" 第"+num+"行，保单号不能为空");
+				continue;
+			}
+			
+			String phone = cardInfos.get("预约电话").toString();
+			String active_content = cardInfos.get("活动内容").toString();
+			
+			
+			CardSampleExample cardSampleExample = new CardSampleExample();
+			cardSampleExample.createCriteria().andProjectNameEqualTo(project_name);
+			List<CardSample> cardSampleList = cardSampleMapper.selectByExample(cardSampleExample);
+			String projectId = UUID.randomUUID().toString();
+			if(cardSampleList.isEmpty()){
+				CardSample cardSample = new CardSample();
+				cardSample.setProjectId(projectId);
+				cardSample.setProjectName(project_name);
+				cardSample.setActiveContent(active_content);
+				cardSample.setIsValid(EnumBool.YES.getCode());
+				this.cardSampleService.insert(cardSample);
+			}
+			
+			CardInfoExample cardInfoExample = new CardInfoExample();
+			cardInfoExample.createCriteria().andCardNoEqualTo(card_no);
+			List<CardInfo> cardInfoList = cardInfoMapper.selectByExample(cardInfoExample);
+			if(cardInfoList.isEmpty()){
+				CardInfo cardInfo = new CardInfo();
+				cardInfo.setCardId(UUID.randomUUID().toString());
+				cardInfo.setCardNo(card_no);
+				cardInfo.setCardType(EnumCardType.CARD.getCode());
+				cardInfo.setStartDate(start_date);
+				cardInfo.setFinishDate(finish_date);
+				cardInfo.setProjectId(projectId);
+				cardInfo.setProjectName(project_name);
+				cardInfo.setPolicyNo(policy_no);
+				cardInfo.setPhone(phone);
+				cardInfo.setCardState(EnumCardState.NORMAL.getCode());
+				cardInfo.setAuditState(EnumAuditState.PENDING.getCode());
+				cardInfo.setIsValid(EnumBool.YES.getCode());
+				this.insert(cardInfo, userInSession);
+			}else{
+				message.append("第"+num+"行，卡号重复");
+				continue;
+			}
+			num++;
+		}
+		return message.toString();
+	}
+
+	@Override
+	public List<CardInfo> selectByCardNo(String cardNo) {
+		CardInfoExample example = new CardInfoExample();
+		example.createCriteria().andCardNoEqualTo(cardNo).andIsValidEqualTo(EnumBool.YES.getCode());
+		return this.cardInfoMapper.selectByExample(example);
+	}
+
+	@Override
+	public boolean isItemUsedUp(String cardId, String itemId) {
+		CardItemExample example = new CardItemExample();
+		example.createCriteria().andCardIdEqualTo(cardId).andItemIdEqualTo(itemId);
+		List<CardItem> list = this.cardItemMapper.selectByExample(example);
+		if(list.size()==1){
+			CardItem cardItem = list.get(0);
+			if(cardItem.getTotalCount()<=cardItem.getUsedCount()){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isCardUsedUp(String cardId) {
+		CardItemExample example = new CardItemExample();
+		example.createCriteria().andCardIdEqualTo(cardId);
+		List<CardItem> list = this.cardItemMapper.selectByExample(example);
+		for (CardItem cardItem : list) {
+			if(cardItem.getTotalCount()>cardItem.getUsedCount()){
+				return false;
+			}
+		}
+		return true;
+	}
+
+}

@@ -1,0 +1,41 @@
+package com.allen.web.service.region;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.SCityMapper;
+import com.allen.web.model.SCity;
+import com.allen.web.model.SCityExample;
+
+@Service
+public class CityServiceImpl extends GenericServiceImpl<SCity, Long>implements CityService {
+
+	@Resource
+	SCityMapper cityMapper;
+	
+	@Override
+	public GenericDao<SCity, Long> getDao() {
+		return cityMapper;
+	}
+
+
+//	@Override
+//	public List<SCity> selectList() {
+//		SCityExample example = new SCityExample();
+//		return this.cityMapper.selectByExample(example);
+//	}
+
+	@Override
+	public List<SCity> selectCityByProvince(Long provinceId) {
+		SCityExample example = new SCityExample();
+		example.createCriteria().andProvinceIdEqualTo(provinceId);
+		return this.cityMapper.selectByExample(example);
+	}
+
+	
+}

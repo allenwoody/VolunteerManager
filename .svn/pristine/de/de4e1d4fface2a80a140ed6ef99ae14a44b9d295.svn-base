@@ -1,0 +1,189 @@
+package com.allen.web.controller.consumption;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+
+import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.allen.core.common.Const;
+import com.allen.core.entity.JSONResult;
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericController;
+import com.allen.core.util.ApplicationUtils;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.enums.EnumCardType;
+import com.allen.web.enums.EnumSex;
+import com.allen.web.model.CardInfo;
+import com.allen.web.model.Consumption;
+import com.allen.web.model.ConsumptionVo;
+import com.allen.web.model.CustomerInfo;
+import com.allen.web.model.MedicalItem;
+import com.allen.web.security.PermissionSign;
+import com.allen.web.service.card.CardInfoService;
+import com.allen.web.service.consumption.ConsumptionService;
+import com.allen.web.service.customer.CustomerService;
+import com.allen.web.service.item.MedicalItemService;
+
+/**
+ * 
+* @ClassName: ConsumptionController 
+* @Description: 消费记录Controller 
+* @author wenquan
+* @date 2016年7月25日 下午5:09:03 
+*
+ */
+@RequestMapping("/consumption")
+@Controller
+public class ConsumptionController extends GenericController{
+
+	@Resource
+	ConsumptionService consumptionService;
+	@Resource
+	CustomerService customerService;
+	@Resource
+	MedicalItemService medicalItemService;
+	@Resource
+	CardInfoService cardInfoService;
+	/**
+	 * 
+	* @Title: lisCustomer 
+	* @Description: 查询客户信息 
+	* @param @param name
+	* @param @param mobile
+	* @param @param certificateNo
+	* @param @param pageNo
+	* @param @param map
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping("/listCustomer")
+	@RequiresPermissions(value = PermissionSign.CUSTOMER_QUERY)
+	public String lisCustomer(
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "mobile", required = false) String mobile,
+			@RequestParam(value = "certificateNo", required = false) String certificateNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
+			ModelMap map){
+		if (StringUtils.isBlank(pageNo)) {
+			pageNo="1";
+		}
+		CustomerInfo model = new CustomerInfo();
+		model.setName(name);
+		model.setMobile(mobile);
+		model.setCertificateNo(certificateNo);
+		Page<CustomerInfo> page = new Page<>(Integer.parseInt(pageNo), Const.PAGE_SIZE);
+		List<CustomerInfo> customerList = this.customerService.selectBySearchingPage(page, model );
+		Map<CustomerInfo, String> dataMap = new HashMap<>();
+		for (CustomerInfo customerInfo : customerList) {
+			dataMap.put(customerInfo, this.consumptionService.selectLastConsumptionDate(customerInfo.getCustomerId()).getConsumptionDate());
+		}
+		map.put("dataMap", dataMap);
+		map.put("page", page);
+		map.put("sexMap", EnumSex.toMap());
+		map.put("model", model);
+		return "/consumption/listCustomer";
+	}
+	
+	/**
+	 * 
+	* @Title: addConsumption 
+	* @Description: 就诊信息录入 
+	* @param @param customerId
+	* @param @param map
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping("/addConsumption")
+	@RequiresPermissions(value = PermissionSign.CUSTOMER_CREATE)
+	public String addConsumption(
+			@RequestParam(value="customerId",required=false)String customerId,
+			ModelMap map){
+		map.put("customer", this.customerService.selectById(customerId));
+		map.put("cardList", this.cardInfoService.selectByCustomer(customerId));
+		map.put("itemList", this.medicalItemService.selectList());
+		map.put("sexMap", EnumSex.toMap());
+		map.put("cardTypeMap", EnumCardType.toMap());
+		return "/consumption/addConsumption";
+	}
+	
+	
+	/**
+	 * 
+	* @Title: insertConsumption 
+	* @Description: 插入新的就诊信息；为接收复杂对象参数使用异步方式 
+	* @param @param voList
+	* @param @param map
+	* @param @return    设定文件 
+	* @return JSONResult<Object>    返回类型 
+	* @throws
+	 */
+	@ResponseBody
+	@RequestMapping("/ajax/insertConsumption")
+	public JSONResult<Object> insertConsumption(@RequestBody  List<ConsumptionVo> voList,
+			ModelMap map){
+		String createUserId = this.getLoginUser().getUserId();
+		String createUserName = this.getLoginUser().getUsername();
+		for (ConsumptionVo consumptionVo : voList) {
+			consumptionVo.setCreateUserId(createUserId);
+			consumptionVo.setCreateUserName(createUserName);
+		}
+		int i = this.consumptionService.insertConsumptionInfo(voList);
+		JSONResult<Object> jsonResult = new JSONResult<>();
+		if(i>0){
+			jsonResult.setSuccess(true);
+		}else {
+			jsonResult.setSuccess(false);
+		}
+		return jsonResult;
+	}
+	
+	/**
+	 * @throws IllegalAccessException 
+	 * 
+	* @Title: getConsumption 
+	* @Description: 异步获取客户诊疗记录 
+	* @param @param customerId
+	* @param @param map
+	* @param @return    设定文件 
+	* @return JSONResult<List<Consumption>>    返回类型 
+	* @throws
+	 */
+	@ResponseBody
+	@RequestMapping("/ajax/getConsumptionInfo")
+	public JSONResult<List<Map<String, Object>>> getConsumptionInfo(@RequestParam(value="customerId",required=false) String customerId,
+			ModelMap map) throws IllegalAccessException {
+		List<Consumption> consumptionList = this.consumptionService.selectConsumptionByCustomer(customerId);
+		List<Map<String, Object>> dataList = new ArrayList<>();
+		for (Consumption consumption : consumptionList) {
+			Map<String, Object> beanMap = ApplicationUtils.objectToMap(consumption);
+			CardInfo cardInfo = this.cardInfoService.selectById(consumption.getCardId());
+			cardInfo.setCardType(EnumCardType.getEnumByCode(cardInfo.getCardType()).getMsg());
+			MedicalItem item = this.medicalItemService.selectById(consumption.getItemId());
+			beanMap.putAll(ApplicationUtils.objectToMap(cardInfo));
+			beanMap.putAll(ApplicationUtils.objectToMap(item));
+			beanMap.put("cost", consumption.getCost());
+			dataList.add(beanMap);
+		}
+		JSONResult<List<Map<String, Object>>> jsonResult = new JSONResult<>();
+		jsonResult.setData(dataList);
+		jsonResult.setSuccess(true);
+		return jsonResult;
+	}
+	
+	
+}

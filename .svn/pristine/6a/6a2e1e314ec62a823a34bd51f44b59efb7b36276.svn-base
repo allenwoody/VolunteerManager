@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.allen.web.dao.DbInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.allen.web.model.DbInfo" >
+    <id column="db_id" property="dbId" jdbcType="CHAR" />
+    <result column="db_card_name" property="dbCardName" jdbcType="VARCHAR" />
+    <result column="web_name" property="webName" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="CHAR" />
+    <result column="is_valid" property="isValid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    db_id, db_card_name, web_name, website, phone, company_id, is_valid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.allen.web.model.DbInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from db_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from db_info
+    where db_id = #{dbId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from db_info
+    where db_id = #{dbId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.allen.web.model.DbInfoExample" >
+    delete from db_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.allen.web.model.DbInfo" >
+    insert into db_info (db_id, db_card_name, web_name, 
+      website, phone, company_id, 
+      is_valid)
+    values (#{dbId,jdbcType=CHAR}, #{dbCardName,jdbcType=VARCHAR}, #{webName,jdbcType=VARCHAR}, 
+      #{website,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{companyId,jdbcType=CHAR}, 
+      #{isValid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.allen.web.model.DbInfo" >
+    insert into db_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dbId != null" >
+        db_id,
+      </if>
+      <if test="dbCardName != null" >
+        db_card_name,
+      </if>
+      <if test="webName != null" >
+        web_name,
+      </if>
+      <if test="website != null" >
+        website,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dbId != null" >
+        #{dbId,jdbcType=CHAR},
+      </if>
+      <if test="dbCardName != null" >
+        #{dbCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="webName != null" >
+        #{webName,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.allen.web.model.DbInfoExample" resultType="java.lang.Integer" >
+    select count(*) from db_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update db_info
+    <set >
+      <if test="record.dbId != null" >
+        db_id = #{record.dbId,jdbcType=CHAR},
+      </if>
+      <if test="record.dbCardName != null" >
+        db_card_name = #{record.dbCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.webName != null" >
+        web_name = #{record.webName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.website != null" >
+        website = #{record.website,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyId != null" >
+        company_id = #{record.companyId,jdbcType=CHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update db_info
+    set db_id = #{record.dbId,jdbcType=CHAR},
+      db_card_name = #{record.dbCardName,jdbcType=VARCHAR},
+      web_name = #{record.webName,jdbcType=VARCHAR},
+      website = #{record.website,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      company_id = #{record.companyId,jdbcType=CHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.allen.web.model.DbInfo" >
+    update db_info
+    <set >
+      <if test="dbCardName != null" >
+        db_card_name = #{dbCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="webName != null" >
+        web_name = #{webName,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=CHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    where db_id = #{dbId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.allen.web.model.DbInfo" >
+    update db_info
+    set db_card_name = #{dbCardName,jdbcType=VARCHAR},
+      web_name = #{webName,jdbcType=VARCHAR},
+      website = #{website,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=CHAR},
+      is_valid = #{isValid,jdbcType=CHAR}
+    where db_id = #{dbId,jdbcType=CHAR}
+  </update>
+</mapper>

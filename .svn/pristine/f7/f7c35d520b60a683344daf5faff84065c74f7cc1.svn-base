@@ -1,0 +1,308 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">客户就诊记录</strong> / <small>新增</small></div>
+  </div>
+  	<div class="am-container">
+  		
+        <form id="frmMain" method="post" class="am-form" action="${rc.contextPath}/consumption/insertCustomer.html" data-am-validator>
+          <input type="hidden" id="customerId" name="customerId" value="$!{customer.customerId}"/>
+          <h4>基本信息</h1>
+          <hr>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-2 am-u-md-2 am-text-right">
+              姓名
+            </div>
+            <div class="am-u-sm-4 am-u-md-4">
+              $!{customer.name}
+            </div>
+            <div class="am-u-sm-2 am-u-md-2 am-text-right">
+              性别
+            </div>
+            <div class="am-u-sm-4 am-u-md-4 am-u-end">
+              $!sexMap.get(${customer.sex})
+            </div>
+          
+          </div>
+
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             手机
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 ">
+              $!customer.mobile
+            </div>
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             身份证号/护照号
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              $!customer.certificateNo
+            </div>
+          </div>
+          <hr>
+          
+          <table class="am-table am-table-bordered">
+		    <thead>
+		        <tr>
+		            <th colSpan="7">就诊信息录入</th>
+		        </tr>
+		        <tr>
+		        	<td>序号</td>
+		        	<td>就诊日期</td>
+		        	<td>产品</td>
+		        	<td>产品类型</td>
+		        	<td>就诊项目</td>
+		        	<td>项目就诊金额</td>
+		        	<td>录入人</td>
+		        </tr>
+		    </thead>
+		    <tbody id="consumption_tbody">
+		    	<tr class="unit">
+		    		<td>1</td>
+		        	<td>
+		        		<input type="text" class="am-input-sm" placeholder="就诊日期" name="consumptionDate" data-am-datepicker readonly required/>
+		        	</td>
+		        	<td>
+						<select id="cardId" name="cardId" placeholder="点击选择.." data-am-selected="{maxHeight: 100,searchBox: 1,btnWidth: '80%', btnSize: 'sm'}" required>
+			              <option selected value=""></option>
+			              #foreach($card in $cardList)
+						  <option value="$!{card.cardId}">$!{card.cardNo}</option>
+						  #end
+						  <option value="0000">无产品</option>
+						</select>
+					</td>
+		        	<td class="cardType">
+		        	
+					</td>
+		        	<td>
+						<select name="medicalItem" class="am-input-sm" placeholder="点击选择.." data-am-selected="{maxHeight: 100,searchBox: 1,btnWidth: '80%', btnSize: 'sm'}" required>
+			              <option selected value=""></option>
+						</select>
+						<input type="text" name="customItem" style="display:none"/>
+					</td>
+		        	<td class="itemCost">
+						<input type="text" class="am-input-sm am-radius" placeholder="金额" name="cost" required/>
+					</td>
+		        	<td>
+		        	${session.getAttribute("currentUser")}
+					</td>
+				</tr>
+		    </tbody>
+	    </table>
+          
+        </form>
+		<div class="am-g">
+			<a href="javascript:addConsumption()" id="addConsumption" class="c1">+增加就诊信息录入</a>		
+		</div>
+      </div>
+      <hr/>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+var map;
+var cardIdHtml="";
+$(function(){
+	$("#submitBtn").click(function(){
+		submitForm();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/consumption/listCustomer.html';
+	});
+	
+	loadMedicalItems();
+	$("#consumption_tbody").delegate("select[name='cardId']","change",function(){
+		if($(this).val()=="0000"){
+			var select_medicalItem = $(this).closest("tr").find($("select[name='medicalItem']"));
+			$(this).closest("td").next().html("");
+			select_medicalItem.parent().find("div").css("display","none");
+			select_medicalItem.parent().find("input[name='customItem']").css("display","");			
+			return;
+		}
+		loadCardItem($(this));
+	});
+	
+	cardIdHtml = $("#cardId").html();
+});
+
+
+function loadMedicalItems(){
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/item/ajax/getItemList.json',
+        dataType : 'json',  
+        async: false,
+        success : function(data){
+        	var map = new Map();
+			if(data.success){
+				var items=data.data;
+        		for(var i=0;i<items.length;i++){
+        			map.put(items[i].itemId,items[i]);
+        		}
+			}else{
+				alert("获取诊疗项目列表操作失败！");
+			}
+			window.map=map;
+        },  
+        error : function(data,textstatus){
+			alert("获取诊疗项目列表操作失败！");
+        }  
+    });
+}
+
+function loadCardItem($card){
+	var param="cardId="+$card.val();
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/card/ajax/getCardItem.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				if(data.data.length>0){
+					$itemSelect=$card.parent().next().next().find("select");
+					$itemSelect.html('<option selected value=""></option>');
+					var html;
+					for(var i=0;i<data.data.length;i++){
+						html = html+'<option value="'+data.data[i].itemId+'">'+window.map.get(data.data[i].itemId).itemName+'</option>'
+					}
+					$itemSelect.append(html);
+					
+				}else{
+				}
+				if(data.message){
+					var type = $card.parent().next();
+					type.text(data.message);
+				}
+			}else{
+				alert("获取可消费项目信息失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取可消费项目信息失败！");
+        }  
+    });
+}
+
+var count=1;
+function addConsumption(){
+	if(count>=20){
+		return;
+	}
+	var consumptionHtml='<tr class="unit"><td>'+(count+1)+'</td>'
+	+'<td>'
+	+'<input type="text" class="am-input-sm" placeholder="就诊日期" name="consumptionDate" data-am-datepicker readonly required/>'
+	+'</td>'
+	+'<td>'
+	+'<select name="cardId" placeholder="点击选择.." data-am-selected="{maxHeight: 100,searchBox: 1,btnWidth: \'80%\', btnSize: \'sm\'}" required>'
+	+cardIdHtml
+	+'</select>'
+	+'<input type="text" name="customItem" style="display:none"/>'//自定义诊疗项目
+	+'</td>'
+	+'<td class="cardType">'
+	+'</td>'
+	+'<td>'
+	+'<select name="medicalItem" class="am-input-sm" placeholder="点击选择.." data-am-selected="{maxHeight: 100,searchBox: 1,btnWidth: \'80%\', btnSize: \'sm\'}" required>'
+	+'<option selected value=""></option>'
+	+'</select>'
+	+'</td>'
+	+'<td class="itemCost">'
+	+'<input type="text" class="am-input-sm am-radius" placeholder="金额" name="cost" required/>'
+	+'</td>'
+	+'<td>'
+	+'${session.getAttribute("currentUser")}'
+	+'</td>'
+	+'</tr>';
+	$(consumptionHtml).appendTo("#consumption_tbody");
+	$("select").selected();
+	$("input[name='consumptionDate']").datepicker();
+	count++;
+}
+
+function submitForm(){
+	var isValid=true;
+	var param='[';
+	var i=1;
+	$(".unit").each(function(){
+		var $consumptionDate=$(this).find("input[name='consumptionDate']");
+		var $cardId=$(this).find("select[name='cardId']");
+		var $itemId=$(this).find("select[name='medicalItem']");
+		var $customItem=$(this).find("input[name='customItem']");
+		var $cost=$(this).find("input[name='cost']");
+		var customerId=$("#customerId").val();
+		if(!$consumptionDate.val()){
+			$consumptionDate.focus();
+			alert("就诊日期不可为空");
+			isValid=false;
+			return false;
+		}
+		if(!$cardId.val()){
+			$cardId.focus();
+			alert("卡不可为空");
+			isValid=false;
+			return false;
+		}
+		if($cardId.val()=="0000"){
+			if(!$customItem.val()){
+				$itemId.focus();
+				alert("就诊项目不可为空");
+				isValid=false;
+				return false;
+			}
+		}
+		if($cardId.val()!="0000"){
+			if(!$itemId.val()){
+				$itemId.focus();
+				alert("就诊项目不可为空");
+				isValid=false;
+				return false;
+			}
+		}
+		if(!$cost.val()){
+			$cost.focus();
+			alert("金额不可为空");
+			isValid=false;
+			return false;
+		}
+		
+		param=param+'{"consumptionDate":"'+$consumptionDate.val()+'","cardId":"'+$cardId.val()+'","cost":"'+$cost.val()+'","itemId":"'+$itemId.val()+'","customerId":"'+customerId+'","customItem":"'+$customItem.val()+'"';
+		if(i==count){
+			param=param+'}';
+		}else{
+			param=param+'},';
+		}
+		i++;
+	})
+	param=param+']';
+	
+	if(!isValid){
+		return;
+	}
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/consumption/ajax/insertConsumption.json',
+		data : param,
+        dataType : 'json', 
+        contentType : 'application/json;charset=utf-8',
+        success : function(data){
+			if(data.success){
+				window.location.href="${rc.contextPath}/consumption/listCustomer.html";
+			}else{
+				alert("保存失败");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("保存失败");
+        }  
+    });
+}
+</script>

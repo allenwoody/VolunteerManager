@@ -1,0 +1,71 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">用户管理</strong> / <small>修改</small></div>
+  </div>
+  	<div class="am-container">
+        <form id="frmMain" class="am-form" action="${rc.contextPath}/user/updateUser.html" method="post" data-am-validator>
+          <input type="hidden" name="userId" value="$!{user.userId}"/>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              登录名
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+             $!{user.loginname}
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              用户名
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="username" value="$!{user.username}" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+            
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              新密码
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="password" id="password" name="password" class="am-input-sm" autocomplete="off"/>
+            </div>
+          </div>
+            
+<!--           <div class="am-g am-margin-top"> -->
+<!--             <div class="am-u-sm-4 am-u-md-2 am-text-right"> -->
+<!--              确认 密码 -->
+<!--             </div> -->
+<!--             <div class="am-u-sm-8 am-u-md-4 am-u-end"> -->
+<!--               <input type="password" name="repeat_password" class="am-input-sm" data-equal-to="#password" autocomplete="off"/> -->
+<!--             </div> -->
+<!--           </div> -->
+            
+            
+
+        </form>
+      </div>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-default  am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+$(function(){
+	$("#submitBtn").click(function(){
+		$("#frmMain").submit();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/user/listUser.html';
+	});
+	
+});
+</script>

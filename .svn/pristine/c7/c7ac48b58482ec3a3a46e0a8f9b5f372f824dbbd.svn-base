@@ -1,0 +1,38 @@
+package com.allen.web.dao;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.CustomerInfo;
+import com.allen.web.model.CustomerInfoExample;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+public interface CustomerInfoMapper extends GenericDao<CustomerInfo, String>{
+    int countByExample(CustomerInfoExample example);
+
+    int deleteByExample(CustomerInfoExample example);
+
+    int deleteByPrimaryKey(String customerId);
+
+    int insert(CustomerInfo record);
+
+    int insertSelective(CustomerInfo record);
+
+    List<CustomerInfo> selectCustomerByCustomCondition(Map<String, String> recordMap, Page<CustomerInfo> page);
+
+    List<CustomerInfo> selectByExample(CustomerInfoExample example);
+
+    List<CustomerInfo> selectByExample(CustomerInfoExample example, Page<CustomerInfo> page);
+
+    CustomerInfo selectByPrimaryKey(String customerId);
+
+    int updateByExampleSelective(@Param("record") CustomerInfo record, @Param("example") CustomerInfoExample example);
+
+    int updateByExample(@Param("record") CustomerInfo record, @Param("example") CustomerInfoExample example);
+
+    int updateByPrimaryKeySelective(CustomerInfo record);
+
+    int updateByPrimaryKey(CustomerInfo record);
+}

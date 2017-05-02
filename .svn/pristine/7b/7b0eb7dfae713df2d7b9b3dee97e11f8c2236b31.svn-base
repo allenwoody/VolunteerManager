@@ -1,0 +1,57 @@
+package com.allen.web.service.company;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.CompanyMapper;
+import com.allen.web.model.Company;
+import com.allen.web.model.CompanyExample;
+import com.allen.web.model.CompanyExample.Criteria;
+import com.hundsun.jresplus.common.util.StringUtil;
+
+
+@Service
+public class CompanyServiceImpl extends GenericServiceImpl<Company, String> implements CompanyService{
+
+	@Resource
+	CompanyMapper companyMapper;
+	
+	@Override
+	public GenericDao<Company, String> getDao() {
+		return this.companyMapper;
+	}
+
+	
+	
+	@Override
+	public List<Company> selectList() {
+		CompanyExample companyExample = new CompanyExample();
+		return this.companyMapper.selectByExample(companyExample);
+	}
+
+	@Override
+	public List<Company> selectList(Page<Company> page, Company company) {
+		CompanyExample companyExample = new CompanyExample();
+		Criteria criteria = companyExample.createCriteria();
+		if(StringUtil.isNotBlank(company.getCompanyName())){
+			criteria.andCompanyNameLike("%"+company.getCompanyName()+"%");
+		}
+		return this.companyMapper.selectByExample(companyExample,page);
+	}
+
+	@Override
+	public List<Company> selectAllCompany() {
+		CompanyExample example = new CompanyExample();
+		Criteria criteria = example.createCriteria();
+		return this.companyMapper.selectByExample(example);
+	}
+	
+	
+	
+}

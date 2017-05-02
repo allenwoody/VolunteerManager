@@ -1,0 +1,449 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+    <div class="am-cf am-padding">
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">卡样维护</strong> / <small>查询</small></div>
+    </div>
+
+    <div class="am-g">
+    <form id="searchForm" action="${rc.contextPath}/card/listCardSample.html">
+     <input type="hidden" id="pageNo" name="pageNo"/>
+      <div class="am-u-sm-12 am-u-md-6">
+        <div class="am-btn-toolbar">
+          <div class="am-btn-group am-btn-group-xs">
+            <button type="button" id="addBtn" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+            <!-- <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button> -->
+          </div>
+        </div>
+      </div>
+      <div class="am-u-sm-12 am-u-md-3 am-u-end">
+        <div class="am-input-group am-input-group-sm">
+          <input type="text" name="projectName" value="$!{cardSample.projectName}" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" id="searchBtn" type="button">搜索</button>
+          </span>
+        </div>
+      </div>
+      </form>
+    </div>
+
+    <div class="am-g">
+      <div class="am-u-sm-12">
+        <form class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" /></th>
+                <th class="table-id"></th>
+                <th class="table-title">卡样名称</th>
+                <th class="table-title">合作公司</th>
+                <th class="table-title">公司活动</th>
+                <th class="table-date">卡样</th>
+                <th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody>
+          	#foreach($cardSample in $carSamples.keySet())
+            <tr>
+              <td><input type="checkbox" value="$!{cardSample.key.projectId}"/></td>
+              <td></td>
+              <td>$!{cardSample.projectName}</td>
+              <td>$!{$carSamples.get($cardSample)}</td>
+              <td>$!{cardSample.compactiname}</td>
+              <td>
+              	<button class="am-btn am-btn-default am-btn-xs am-text-primary"
+ 	     			data-am-popover="{theme: 'primary',content: '<img style=\'width:200px;\' src=\'$!{rc.contextPath}$!{cardSample.cardImage}\'/>', trigger: 'hover focus'}">
+ 					预览
+				</button>
+              </td>
+              <td>
+                <div class="am-btn-toolbar">
+                  <div class="am-btn-group am-btn-group-xs">
+                    ##<button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location='${rc.contextPath}/card/editCardSample.html?projectId=${cardSample.projectId}'"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-warning" onclick="javascript:assignItems('$!{cardSample.projectId}')"><span class="am-icon-pencil-square-o"></span> 分配诊疗项目</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="javascript:deleteItem('$!{cardSample.projectId}')"><span class="am-icon-trash-o"></span> 删除</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            #end
+          </tbody>
+        </table>
+          <div class="am-cf">
+  共 ${page.totalCount} 条记录
+  <div class="am-fr">
+    <ul class="am-pagination">
+      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:query(1)">«</a></li>
+      #if(${page.totalPages}>0)
+      #foreach($foo in [1..${page.totalPages}])
+      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:query($foo)">$foo</a></li>
+      #end
+      #else
+      <li class="am-active"><a href="javascript:query(1)">1</a></li>
+      #end
+      
+      <li #if(${page.pageNo}==${page.totalPages}) class="am-disabled" #end><a href="javascript:query(${page.totalPages})">»</a></li>
+    </ul>
+  </div>
+</div>
+          <hr />
+          <p>注：.....</p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+ </div>
+ 
+ <div class="am-modal am-modal-confirm " tabindex="-1" id="assign-modal">
+ <form id="assignItemsForm" action="${rc.contextPath}/user/saveRoleAssignment.json" method="post">
+ <div class="am-modal-dialog">
+    <div class="am-modal-hd">分配诊疗项目</div>
+    <div class="am-modal-bd">
+ <!-- medical item list start -->
+
+    <div class="am-g am-scrollable-vertical">
+      <div class="am-u-sm-12">
+        <form class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" id="main-item-checkbox" /></th>
+                <th class="table-title">项目名称</th>
+                <th class="table-title">金额(元)</th>
+                <th class="table-title">备注</th>
+              </tr>
+          </thead>
+          <tbody id="item-tbody">
+          </tbody>
+        </table>
+          <div class="am-cf" id="modal-pagination">
+			<!--此处JS拼接分页数据 -->
+		  </div>
+          <hr/>
+        </form>
+      </div>
+
+    </div>
+ 	<!-- medical item list end -->
+ 
+  <input type="hidden" id="projectId" name="projectId"/>
+	<!-- content -->
+	<div class="am-g am-margin-top ">
+            <div class="am-u-sm-4 am-u-md-4 am-text-justify">
+             诊疗项目
+            </div>
+            <div class="am-u-sm-4 am-u-md-4 am-u-end am-text-justify">
+            次数
+            </div>
+          </div>
+          <div id="boxes" class="am-scrollable-vertical">
+   		  </div>
+    </div>
+    <div class="am-modal-footer">	
+      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+    </div>
+  </div>
+  </form> 
+</div>
+ 
+ #admin_sidebar_sm
+ #confirm
+ #admin_footer
+ 
+ 
+<script type="text/javascript">
+ var _itemList = new Object();//用于存储全部诊疗项目
+$(function(){
+	$("#addBtn").click(function(){
+		window.location.href='${rc.contextPath}/card/addCardSample.html';
+	});
+	$("#searchBtn").click(function(){
+		query();
+	});
+	
+	$("#boxes").delegate(".del","click",function(){
+		$(this).parent().parent().remove();
+	})
+	
+	$(document).on("click",".itemId", function(){
+		var flag = $(this).is(":checked");
+		var selectItem = new Object();
+		if(flag){
+			if($("#boxes [value="+$(this).val()+"]").length==0){
+				selectItem.itemId=$(this).val();
+				selectItem.itemName=$(this).parent().next().text();
+				createBox(selectItem,_itemList);
+			}
+		}else{
+			$("#boxes [value="+$(this).val()+"]").parent().parent().remove();
+		}
+	});
+});
+
+
+function query(pageNo){
+	if(pageNo){
+		$("#pageNo").val(pageNo);
+	}
+	$("#searchForm").submit();
+	
+}
+
+function deleteItem(projectId){
+	if(projectId){
+		$('#my-confirm').modal({
+	        relatedTarget: this,
+	        onConfirm: function(options) {
+	          window.location.href='${rc.contextPath}/card/deleteCardSample.html?projectId='+ projectId;
+								},
+								// closeOnConfirm: false,
+								onCancel : function() {
+
+								}
+							});
+		}
+	}
+	
+function assignItems(projectId){
+	$("#projectId").val(projectId);
+	$("#boxes").empty();
+	loadMedicalItems(null,1,projectId);
+	if(_itemList.length){
+		loadExistingItems(projectId,_itemList);
+	}else{
+		loadItemList(projectId,loadExistingItems);
+	}
+ 	$('#assign-modal').find('[data-am-modal-confirm]').off('click.close.modal.amui');
+	$('#assign-modal').modal({
+		height:623,
+        relatedTarget: this,
+        onConfirm: function(options) {
+        	//先去掉确定按钮的事件
+        	//校验是否重复
+        	var set = new Set();
+//         	var hasNoRepeat = true;
+//         	$("select[name='itemId']").each(function(){
+//         		if(set.has($(this).val())){
+//         			//出现重复的item
+//         			alert("有重复的诊疗项目");
+//         			hasNoRepeat = false;
+//         		}else{
+// 	        	   set.add($(this).val());
+//         		}
+//         	})
+//         	if(!hasNoRepeat){
+//         		return;
+//         	}
+        	if(!$("#assignItemsForm").validator("isFormValid")){
+        		alert("有未填项");
+    			return;
+    		}
+        	$.AMUI.progress.start();
+        	//加载已分配的项目
+        	$.ajax({
+    			type : 'post',
+                url : '${rc.contextPath}/card/saveProjectItemAssignment.json',
+    			data : $("#assignItemsForm").serialize(),
+                dataType : 'json',  
+                success : function(data){
+    				if(data.success){
+	    				$.AMUI.progress.done();
+    				}else{
+    					alert("分配诊疗项目操作失败！");
+    				}
+                },  
+                error : function(data,textstatus){
+    				alert("分配诊疗项目操作失败！");
+                }  
+            });
+        	//当事情搞定后，调用快速关闭的事件。。
+        	$(".am-dimmer").trigger("click")
+        },
+        // closeOnConfirm: false,
+        onCancel: function() {
+        }
+        
+      });
+// 	$("select[name='itemId']").selected();
+}
+
+
+/**  
+ * selectedItem:选中的项目
+ * itemList：全部列表
+ */
+function createBox(selectedItem,itemList){
+	var itemName ="";
+	for(var i=0;i<itemList.length;i++){
+			if(itemList[i].itemId==selectedItem.itemId){
+				itemName = itemList[i].itemName;
+			}
+	}
+	var boxHtml='<div class="am-g am-margin-top">'
+			+'<div class="am-u-sm-4 am-u-md-4">'
+	if(selectedItem){
+		boxHtml=boxHtml+'<span>'+itemName+'</span>'
+		+'<input type="hidden" name="itemId" value="'+selectedItem.itemId+'"/>';
+	}
+	boxHtml=boxHtml+'</div>'
+			+'<div class="am-u-sm-4 am-u-md-4">'
+			+'<input type="number" name="totalCount"'
+	if(selectedItem){
+		boxHtml=boxHtml+' value="'+selectedItem.totalCount+'" ';
+	}
+	boxHtml=boxHtml+'class="am-input-lg" maxlength="25" min="1" required>'
+			+'</div>'
+			+'<div class="am-u-sm-4 am-u-md-4 am-u-end">'
+			+'<a class="del" href="javascript:;"></a>'
+			+'</div>'
+			+'</div>';
+	$("#boxes").append(boxHtml);
+}
+
+
+/**
+ * 加载卡样已分配的项目
+ */
+function loadExistingItems(_projectId,itemList){
+	var param = "projectId="+_projectId;
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/card/ajax/getExistingItems.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				if(data.data.length>0){
+					for(var i=0;i<data.data.length;i++){
+						createBox(data.data[i],itemList);
+					}
+				}else{
+					createBox(null,itemList);//这里现在应该没有用了
+				}
+				fixCheckbox(itemList);
+			}else{
+				alert("获取分配医疗项目操作失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取分配医疗项目操作失败！");
+        }  
+    });
+} 
+
+/**
+ * return array[MedicalItem]
+ */
+function loadMedicalItems(itemName,pageNo,projectId, callback){
+	var param={"itemName":itemName,"pageNo":pageNo};
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/item/ajax/getMedicalItems.json',
+        data:param,
+        dataType : 'json',  
+        async: false,
+        success : function(data){
+			if(data.success){
+				$itemTbody = $("#item-tbody");
+				$itemTbody.empty();
+				var itemList = data.data[0];
+				var page = data.data[1];
+				var itemHtml = "";
+				for(var i=0;i<itemList.length;i++){
+					itemHtml=itemHtml+'<tr><td><input type="checkbox" class="itemId" value="'+itemList[i].itemId+'"></td>'
+						+'<td>'+itemList[i].itemName+'</td>'
+						+'<td>'+itemList[i].itemCost+'</td>'
+						+'<td>'+itemList[i].remark+'</td></tr>';
+				}
+				$itemTbody.append(itemHtml);
+				fixCheckbox(itemList);
+				
+				//分页页码数据
+				$("#modal-pagination").empty();
+				var pageHtml ='共'+page.totalCount+'条记录';
+				pageHtml=pageHtml+'<div class="am-fr"><ul class="am-pagination">'
+				if(page.pageNo==1){
+					pageHtml=pageHtml+'<li class="am-disabled"><a href="javascript:itemQuery(1)">«</a></li>';
+				}else{
+					pageHtml=pageHtml+'<li><a href="javascript:itemQuery(1)">«</a></li>';
+				}
+				if(page.totalPages>0){
+					for(var i=1;i<=page.totalPages;i++){
+						if(i==page.pageNo){
+							pageHtml=pageHtml + '<li class="am-active"><a href="javascript:itemQuery('+i+')">'+i+'</a></li>';
+						}else{
+							pageHtml=pageHtml + '<li ><a href="javascript:itemQuery('+i+')">'+i+'</a></li>';
+						}
+						
+					}
+				}else{
+					pageHtml=pageHtml + '<li class="am-active"><a href="javascript:itemQuery(1)">1</a></li>'
+				}
+				if(page.pageNo==page.totalPages){
+					pageHtml=pageHtml + '<li class="am-disabled"><a href="javascript:itemQuery('+page.totalPages+')">»</a></li>'
+				}else{
+					pageHtml=pageHtml + '<li><a href="javascript:itemQuery('+page.totalPages+')">»</a></li>'
+				}
+				pageHtml=pageHtml + '</ul></div>';
+				$("#modal-pagination").append(pageHtml);
+				if(callback){
+					callback.apply(this,[projectId,itemList]);
+				}
+			}else{
+				alert("获取诊疗项目列表操作失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取诊疗项目列表操作失败！");
+        }  
+    });
+}
+
+/*
+ * 加载全部项目列表
+ */
+function loadItemList(projectId, callback){
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/item/ajax/getItemList.json',
+        dataType : 'json',  
+        async: false,
+        success : function(data){
+			if(data.success){
+				var itemList = data.data;
+				_itemList = data.data;
+				if(callback){
+					callback.apply(this,[projectId,itemList]);
+				}
+			}else{
+				alert("获取诊疗项目列表操作失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取诊疗项目列表操作失败！");
+        }  
+    });
+}
+
+/*
+ * modal层分页查询
+ */
+function itemQuery(pageNo,itemName){
+	loadMedicalItems(itemName,pageNo);
+}
+
+/*
+ * modal层checkbox选中状态初始化
+ */
+function fixCheckbox(itemList){
+	for(var i=0;i<itemList.length;i++){
+		if($("#boxes [value="+itemList[i].itemId+"]").length>0){
+			$("#item-tbody [value="+itemList[i].itemId+"]").prop("checked","checked");
+		}
+	}
+}
+</script>

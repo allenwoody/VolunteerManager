@@ -1,0 +1,191 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">卡样维护</strong> / <small>新增</small></div>
+  </div>
+  	<div class="am-container">
+        <form id="frmMain" method="post" class="am-form" action="${rc.contextPath}/card/insertCardSample.html" data-am-validator enctype="multipart/form-data" >
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             卡项目名称
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-sm-end">
+				<input type="text" name="projectName" class="am-input-sm" maxlength="25" required>
+            </div>
+            <div class="am-hide-sm-only am-u-md-4 am-u-lg-6">*必填</div>
+          </div>
+          <div class="am-g am-margin-top">
+          <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              活动内容
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+				<textarea  name="activeContent" class="am-input-sm" maxlength="100" required>
+				</textarea>
+            </div>
+            </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              合作公司	
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+			<div class="am-form-group">
+              <select name="company" id="company" placeholder="点击选择.." data-am-selected>
+              	 <option selected value=""></option>
+              	#foreach($company in $companyList)
+				  <option value="$!{company.companyId}">$!{company.companyName}</option>
+				#end
+			  </select>
+            </div>
+          </div>
+          </div>  
+            
+            <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              公司活动	
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+			<div class="am-form-group">
+              <select name="compActiName" id="compActiName" placeholder="点击选择.." data-am-selected>
+              	 <option selected value=""></option>
+			  </select>
+			  <input type="hidden" name="activityName" id="activityName"/>
+            </div>
+          </div>
+          </div>
+            
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+          卡样图片
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <div class="am-form-group am-form-file">
+			  	<button type="button" class="am-btn am-btn-primary am-btn-sm">
+			    <i class="am-icon-cloud-upload"></i> 选择要上传的图片</button>
+			    <input id="doc-form-file" name="imageFile" type="file" multiple required>
+			  </div>
+			<div id="file-list"></div>	
+            </div>
+            <div class="am-hide-sm-only am-u-md-4 am-u-lg-6">*必填</div>
+          </div>
+            
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             适用机构
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <span id="orgNames"></span>
+              <button
+                  id="btn_org"
+				  type="button"
+				  class="am-btn am-btn-sm "
+				  data-am-modal="{target: '#org-modal-1'}">
+				  点击选择机构
+				</button>
+				<input type="hidden" id="orgId" name="orgId" />
+            </div>
+          </div>
+        </form>
+      </div>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+
+
+<!-- model -->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="org-modal-1">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">选择一个用户所属机构
+      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+    </div>
+    <div class="am-modal-bd">
+    <div class="am-input-group am-input-group-sm">
+          <input type="text" name="search" placeholder="搜索..." autocomplete="off" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" id="btnResetSearch" type="button">&times;</button>
+            <span id="matches"></span>
+          </span>
+        </div>
+      <div class="am-g">
+      <div class="am-u-sm-12 fancytree-container">
+          <table id="treetable" class="table table-condensed table-hover table-striped am-table am-table-striped am-table-hover table-main">
+    	  	<colgroup>
+		      <col width="80px"></col>
+		      <col width="30px"></col>
+		      <col width="*"></col>
+		    </colgroup>
+		    <thead>
+		      <tr> <th></th> <th></th> <th>机构</th> </tr>
+		    </thead>
+		    <tbody>
+		      <tr> <td></td> <td></td> <td></td> </tr>
+		    </tbody>
+  		  </table>
+          <div class="am-cf">
+</div>
+          <hr />
+          <p>注：.....</p>
+      </div>
+
+    </div>
+    </div>
+  </div>
+</div>
+
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+$(function(){
+	
+	//上传 start
+	$('#doc-form-file').on('change', function() {
+	      var fileNames = '';
+	      $.each(this.files, function() {
+	        fileNames += '<span class="am-badge">' + this.name + '</span> ';
+	      });
+	      $('#file-list').html(fileNames);
+	    });
+    //end
+    
+    $('#company').on('change',function(){
+    	var param = "companyId="+$(this).val();
+		$.ajax({
+			type : 'post',
+	        url : '${rc.contextPath}/company/ajax/getExistingActivity.json',
+			data : param,
+	        dataType : 'json',  
+	        success : function(data){
+				if(data.success){
+					$("#compActiName").children().remove();
+					if(data.data.length>0){
+						for(var i=0;i<data.data.length;i++){
+							$("#compActiName").append("<option value='"+data.data[i].id+"'>"+data.data[i].activityName+"</option>");
+						}
+					}
+				}else{
+					alert("获取分配公司活动操作失败！");
+				}
+	        },  
+	        error : function(data,textstatus){
+				alert("获取分配公司活动操作失败！");
+	        }  
+	    });
+    });
+	
+	$("#submitBtn").click(function(){
+		$('#activityName').val($("#compActiName").find("option:selected").text());
+		$("#frmMain").submit();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/card/listCardSample.html';
+	});
+	
+});
+</script>

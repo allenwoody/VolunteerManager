@@ -1,0 +1,90 @@
+package com.allen.web.service.customer;
+
+import java.util.List;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.CustomerInfo;
+/**
+ * 
+* @ClassName: CustomerService 
+* @Description: 客户信息接口 
+* @author wenquan
+* @date 2016年6月20日 上午11:57:45 
+*
+ */
+public interface CustomerService extends GenericService<CustomerInfo, String> {
+
+	/**
+	 * @param companyId TODO
+	 * 
+	* @Title: selectBySearchingPage 
+	* @Description: 按搜索条件分页查询客户信息
+	* @param @param page
+	* @param @param customerInfo
+	* @param @return    设定文件 
+	* @return List<CustomerInfo>    返回类型 
+	* @throws
+	 */
+	List<CustomerInfo> selectBySearchingPage(Page<CustomerInfo> page, CustomerInfo customerInfo, String companyId);
+
+	/**
+	 * 
+	* @Title: selectPartnerCustomer 
+	* @Description: 获取同行客户列表（除去当前客户）
+	* @param @param customerId
+	* @param @return    设定文件 
+	* @return List<CustomerInfo>    返回类型 
+	* @throws
+	 */
+	List<CustomerInfo> selectPartnerCustomer(String customerId);
+	
+	/**
+	 * 
+	* @Title: selectCustomerByName 
+	* @Description: 按姓名模糊查询客户
+	* @param @param name
+	* @param @return    设定文件 
+	* @return List<CustomerInfo>    返回类型 
+	* @throws
+	 */
+	List<CustomerInfo> selectCustomerByName(String name);
+	
+	/**
+	 * @param cutomerInfo TODO
+	 * @param page TODO
+	 * 
+	* @Title: selectTemporaryStorage 
+	* @Description: 查询当前用户暂存的客户信息
+	* @param @param currentUserId
+	* @param @return    设定文件 
+	* @return List<CustomerInfo>    返回类型 
+	* @throws
+	 */
+	List<CustomerInfo> selectTemporaryStorage(CustomerInfo customerInfo, String currentUserId, Page<CustomerInfo> page);
+	
+	/**
+	 * @param model TODO
+	 * 
+	* @Title: selectMyCustomerInfo 
+	* @Description: 查询当前用户已提交保存的客户信息
+	* @param @param currentUserId
+	* @param @param page
+	* @param @return    设定文件 
+	* @return List<CustomerInfo>    返回类型 
+	* @throws
+	 */
+	List<CustomerInfo> selectMyCustomerInfo(CustomerInfo customerInfo, String currentUserId, Page<CustomerInfo> page);
+
+	/**
+	 * 
+	* @Title: createCustomer 
+	* @Description: 创建客户信息
+	* @param @param customerInfo
+	* @param @param channels 来源渠道
+	* @param @return    设定文件 
+	* @return int    返回类型 
+	* @throws
+	 */
+	int createCustomer(CustomerInfo customerInfo, String[] channels);
+}

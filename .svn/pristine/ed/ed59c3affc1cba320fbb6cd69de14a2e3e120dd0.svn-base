@@ -1,0 +1,23 @@
+package com.allen.web.service.card;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.CardSampleOrganizationMapper;
+import com.allen.web.model.CardSampleOrganization;
+
+@Service
+public class CardSampleOrganizationServiceImpl extends GenericServiceImpl<CardSampleOrganization, String> implements CardSampleOrganizationService{
+	
+	@Resource
+	CardSampleOrganizationMapper cardSampleOrganizationMapper;
+	
+	@Override
+	public GenericDao<CardSampleOrganization, String> getDao() {
+		return this.cardSampleOrganizationMapper;
+	}
+
+}

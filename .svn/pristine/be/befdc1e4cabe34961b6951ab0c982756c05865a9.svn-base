@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.allen.web.dao.AuditProcedureMapper" >
+  <resultMap id="BaseResultMap" type="com.allen.web.model.AuditProcedure" >
+    <id column="procedure_id" property="procedureId" jdbcType="CHAR" />
+    <result column="category" property="category" jdbcType="CHAR" />
+    <result column="is_origin" property="isOrigin" jdbcType="CHAR" />
+    <result column="role_id" property="roleId" jdbcType="CHAR" />
+    <result column="next_procedure_id" property="nextProcedureId" jdbcType="CHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="CHAR" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    procedure_id, category, is_origin, role_id, next_procedure_id, create_user_id, create_user_name, 
+    create_date, description
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.allen.web.model.AuditProcedureExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from audit_procedure
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from audit_procedure
+    where procedure_id = #{procedureId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from audit_procedure
+    where procedure_id = #{procedureId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.allen.web.model.AuditProcedureExample" >
+    delete from audit_procedure
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.allen.web.model.AuditProcedure" >
+    insert into audit_procedure (procedure_id, category, is_origin, 
+      role_id, next_procedure_id, create_user_id, 
+      create_user_name, create_date, description
+      )
+    values (#{procedureId,jdbcType=CHAR}, #{category,jdbcType=CHAR}, #{isOrigin,jdbcType=CHAR}, 
+      #{roleId,jdbcType=CHAR}, #{nextProcedureId,jdbcType=CHAR}, #{createUserId,jdbcType=CHAR}, 
+      #{createUserName,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.allen.web.model.AuditProcedure" >
+    insert into audit_procedure
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="procedureId != null" >
+        procedure_id,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="isOrigin != null" >
+        is_origin,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="nextProcedureId != null" >
+        next_procedure_id,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="procedureId != null" >
+        #{procedureId,jdbcType=CHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=CHAR},
+      </if>
+      <if test="isOrigin != null" >
+        #{isOrigin,jdbcType=CHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=CHAR},
+      </if>
+      <if test="nextProcedureId != null" >
+        #{nextProcedureId,jdbcType=CHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=CHAR},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.allen.web.model.AuditProcedureExample" resultType="java.lang.Integer" >
+    select count(*) from audit_procedure
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update audit_procedure
+    <set >
+      <if test="record.procedureId != null" >
+        procedure_id = #{record.procedureId,jdbcType=CHAR},
+      </if>
+      <if test="record.category != null" >
+        category = #{record.category,jdbcType=CHAR},
+      </if>
+      <if test="record.isOrigin != null" >
+        is_origin = #{record.isOrigin,jdbcType=CHAR},
+      </if>
+      <if test="record.roleId != null" >
+        role_id = #{record.roleId,jdbcType=CHAR},
+      </if>
+      <if test="record.nextProcedureId != null" >
+        next_procedure_id = #{record.nextProcedureId,jdbcType=CHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=CHAR},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update audit_procedure
+    set procedure_id = #{record.procedureId,jdbcType=CHAR},
+      category = #{record.category,jdbcType=CHAR},
+      is_origin = #{record.isOrigin,jdbcType=CHAR},
+      role_id = #{record.roleId,jdbcType=CHAR},
+      next_procedure_id = #{record.nextProcedureId,jdbcType=CHAR},
+      create_user_id = #{record.createUserId,jdbcType=CHAR},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      create_date = #{record.createDate,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.allen.web.model.AuditProcedure" >
+    update audit_procedure
+    <set >
+      <if test="category != null" >
+        category = #{category,jdbcType=CHAR},
+      </if>
+      <if test="isOrigin != null" >
+        is_origin = #{isOrigin,jdbcType=CHAR},
+      </if>
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=CHAR},
+      </if>
+      <if test="nextProcedureId != null" >
+        next_procedure_id = #{nextProcedureId,jdbcType=CHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=CHAR},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where procedure_id = #{procedureId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.allen.web.model.AuditProcedure" >
+    update audit_procedure
+    set category = #{category,jdbcType=CHAR},
+      is_origin = #{isOrigin,jdbcType=CHAR},
+      role_id = #{roleId,jdbcType=CHAR},
+      next_procedure_id = #{nextProcedureId,jdbcType=CHAR},
+      create_user_id = #{createUserId,jdbcType=CHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where procedure_id = #{procedureId,jdbcType=CHAR}
+  </update>
+</mapper>

@@ -1,0 +1,31 @@
+package com.allen.web.dao;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.CompanyActivity;
+import com.allen.web.model.CompanyActivityExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface CompanyActivityMapper extends GenericDao<CompanyActivity,String>{
+    int countByExample(CompanyActivityExample example);
+
+    int deleteByExample(CompanyActivityExample example);
+
+    int deleteByPrimaryKey(String id);
+
+    int insert(CompanyActivity record);
+
+    int insertSelective(CompanyActivity record);
+
+    List<CompanyActivity> selectByExample(CompanyActivityExample example);
+
+    CompanyActivity selectByPrimaryKey(String id);
+
+    int updateByExampleSelective(@Param("record") CompanyActivity record, @Param("example") CompanyActivityExample example);
+
+    int updateByExample(@Param("record") CompanyActivity record, @Param("example") CompanyActivityExample example);
+
+    int updateByPrimaryKeySelective(CompanyActivity record);
+
+    int updateByPrimaryKey(CompanyActivity record);
+}

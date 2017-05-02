@@ -1,0 +1,413 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+    <div class="am-cf am-padding">
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">我的客户</strong> / <small>查询</small></div>
+    </div>
+
+	 <div id="tabs" class="am-tabs am-margin" data-am-tabs>
+      <ul class="am-tabs-nav am-nav am-nav-tabs">
+        <li class="am-active"><a href="#tab1">已提交保存的客户信息</a></li>
+        <li><a href="#tab2">暂存的客户信息</a></li>
+      </ul>
+
+
+    <div class="am-tabs-bd">
+    <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+    <div class="am-g">
+    <form id="searchForm1" action="${rc.contextPath}/customer/listMyCustomer.html" method="post">
+     <input type="hidden" id="pageNo1" name="pageNo"/>
+      <div class="am-u-sm-12 am-u-md-1">
+        <div class="am-btn-toolbar">
+          <div class="am-btn-group am-btn-group-xs">
+            <!-- <button type="button" id="addBtn" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button> -->
+            <!-- <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button> -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="am-u-sm-6 am-u-md-3">
+        <div class="am-input-group am-input-group-sm">
+  			<span class="am-input-group-label">姓名</span>
+  			<input type="text" name="name" value="$!{model.name}" class="am-form-field" placeholder="姓名">
+		</div>
+      </div>
+      <div class="am-u-sm-6 am-u-md-3">
+        <div class="am-input-group am-input-group-sm">
+  			<span class="am-input-group-label">手机号</span>
+  			<input type="text" name="mobile" value="$!{model.mobile}" class="am-form-field" placeholder="手机号">
+		</div>
+      </div>
+      <div class="am-u-sm-6 am-u-md-3">
+        <div class="am-input-group am-input-group-sm">
+  			<span class="am-input-group-label">证件号</span>
+  			<input type="text" name="certificateNo" value="$!{model.certificateNo}" class="am-form-field" placeholder="证件号">
+		</div>
+      </div>
+      <div class="am-u-sm-12 am-u-md-2 am-u-end">
+        <div class="am-input-group am-input-group-sm">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" id="searchBtn1" type="button">搜索</button>
+          </span>
+        </div>
+      </div>
+      </form>
+    </div>
+	
+	
+    <div class="am-g">
+      <div class="am-u-sm-12">
+        <form class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" /></th>
+                <th class="table-title">姓名</th>
+                <th class="table-date">性别</th>
+                <th class="table-title">手机号</th>
+                <th class="table-title">邮箱</th>
+                <!-- <th class="table-title">就诊信息</th> -->
+                <th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody id="tbody_list1">
+            <!-- <tr>
+              <td><input type="checkbox" value="$!{customer.customerId}"/></td>
+              <td>$!{customer.name}</td>
+              <td>$!{sexMap.get(${customer.sex})}</td>
+              <td>$!{customer.mobile}</td>
+              <td>$!{customer.email}</td>
+              <td>
+                <div class="am-btn-toolbar">
+                  <div class="am-btn-group am-btn-group-xs">
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location='${rc.contextPath}/customer/editCustomer.html?customerId=$!{customer.customerId}'"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="javascript:deleteItem('$!{customer.customerId}')"><span class="am-icon-trash-o"></span> 删除</button>
+                  </div>
+                </div>
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
+          <div class="am-cf">
+          <div id="totalCount1">共 ${page.totalCount} 条记录</div>
+  <div class="am-fr">
+    <ul class="am-pagination">
+      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:queryList1(1)">«</a></li>
+      #if(${page.totalPages}>0)
+      #foreach($foo in [1..${page.totalPages}])
+      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:queryList1($foo)">$foo</a></li>
+      #end
+      #else
+      <li class="am-active"><a href="javascript:queryList1(1)">1</a></li>
+      #end
+      
+      <li #if(${page.pageNo}==${page.totalPages}) class="am-disabled" #end><a href="javascript:queryList1(${page.totalPages})">»</a></li>
+    </ul>
+  </div>
+</div>
+          <hr />
+          <p>注：.....</p>
+        </form>
+      </div>
+
+    </div>
+    
+    
+    </div>
+	<!--   我是两个选项卡内容的分割线   -->
+	<div class="am-tab-panel am-fade am-in am-active" id="tab2">
+    <div class="am-g">
+    <form id="searchForm2" action="${rc.contextPath}/customer/listTemporaryStorage.html" method="post">
+     <input type="hidden" id="pageNo2" name="pageNo"/>
+      <div class="am-u-sm-12 am-u-md-1">
+        <div class="am-btn-toolbar">
+          <div class="am-btn-group am-btn-group-xs">
+            <!-- <button type="button" id="addBtn" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button> -->
+            <!-- <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button> -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="am-u-sm-6 am-u-md-3">
+        <div class="am-input-group am-input-group-sm">
+  			<span class="am-input-group-label">姓名</span>
+  			<input type="text" name="name" value="$!{model.name}" class="am-form-field" placeholder="姓名">
+		</div>
+      </div>
+      <div class="am-u-sm-6 am-u-md-3">
+        <div class="am-input-group am-input-group-sm">
+  			<span class="am-input-group-label">手机号</span>
+  			<input type="text" name="mobile" value="$!{model.mobile}" class="am-form-field" placeholder="手机号">
+		</div>
+      </div>
+      <div class="am-u-sm-6 am-u-md-3">
+        <div class="am-input-group am-input-group-sm">
+  			<span class="am-input-group-label">证件号</span>
+  			<input type="text" name="certificateNo" value="$!{model.certificateNo}" class="am-form-field" placeholder="证件号">
+		</div>
+      </div>
+      <div class="am-u-sm-12 am-u-md-2 am-u-end">
+        <div class="am-input-group am-input-group-sm">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" id="searchBtn2" type="button">搜索</button>
+          </span>
+        </div>
+      </div>
+      </form>
+    </div>
+	
+	
+    <div class="am-g">
+      <div class="am-u-sm-12">
+        <form class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" /></th>
+                <th class="table-title">姓名</th>
+                <th class="table-date">性别</th>
+                <th class="table-title">手机号</th>
+                <th class="table-title">公司</th>
+                <th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody id="tbody_list2">
+          </tbody>
+        </table>
+          <div class="am-cf">
+ <div id="totalCount2">共 ${page.totalCount} 条记录</div>
+  <div class="am-fr">
+    <ul class="am-pagination">
+      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:queryList2(1)">«</a></li>
+      #if(${page.totalPages}>0)
+      #foreach($foo in [1..${page.totalPages}])
+      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:queryList2($foo)">$foo</a></li>
+      #end
+      #else
+      <li class="am-active"><a href="javascript:queryList2(1)">1</a></li>
+      #end
+      
+      <li #if(${page.pageNo}==${page.totalPages}) class="am-disabled" #end><a href="javascript:queryList2(${page.totalPages})">»</a></li>
+    </ul>
+  </div>
+</div>
+          <hr />
+          <p>注：.....</p>
+        </form>
+      </div>
+
+    </div>
+    
+    
+    </div>
+	
+	</div>
+  </div>
+ </div>
+ #admin_sidebar_sm
+ #confirm
+ #admin_footer
+ 
+ <div class="am-modal am-modal-no-btn" tabindex="-1" id="consumption_modal">
+  <div class="am-modal-dialog">
+    <div class="am-modal-bd">
+    	<table class="am-table">
+		    <thead>
+		        <tr>
+		            <th colSpan="7">就诊信息</th>
+		        </tr>
+		        <tr>
+		        	<td>就诊日期</td>
+		        	<td>就诊项目</td>
+		        	<td>付款类型</td>
+		        	<td>卡号</td>
+		        	<td>项目就诊金额</td>
+		        	<td>录入</td>
+		        </tr>
+		    </thead>
+		    <tbody id="consumption_tbody">
+		    </tbody>
+	    </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){
+	queryList1(1)
+	$('#tabs').find('a').on('opened.tabs.amui', function(e) {
+// 		  console.log('[%s] 选项卡打开了', $(this).text());
+		  var t = $(this).attr("href");
+		  if(t=="#tab1"){//已提交保存的客户信息
+			  queryList1();
+		  }else if(t=="#tab2"){//暂存的客户信息
+			  queryList2();
+		  }
+		})
+	
+	$("#addBtn").click(function(){
+		window.location.href='${rc.contextPath}/customer/addCustomer.html';
+	});
+// 	$("#queryTsBtn").click(function(){
+// 		var page_no = $("#pageNo").val();
+// 		$("#searchForm").attr("action","${rc.contextPath}/customer/listTemporaryStorage.htm");
+// 		$("#searchForm").submit();
+// 	});
+	$("#searchBtn1").click(function(){		
+		queryList1();
+	});
+	$("#searchBtn2").click(function(){		
+		queryList2();
+	});
+});
+
+
+
+
+
+function queryList1(pageNo){
+	if(pageNo){
+		$("#pageNo1").val(pageNo)
+	}else{
+		pageNo=$("#pageNo1").val();
+	}
+	param = $("#searchForm1").serialize();
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/customer/ajax/listMyCustomer.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				$("#tbody_list1").empty();
+				var customerList = data.data[0];
+				var page = data.data[1];
+				if(customerList.length>0){
+					for(var i=0;i<customerList.length;i++){
+						var trHtml='<tr><td><input type="checkbox" value="'+customerList[i].customerId+'"/></td>'
+						+'<td>'+customerList[i].name+'</td>'
+						+'<td>'+customerList[i].sex+'</td>'
+						+'<td>'+customerList[i].mobile+'</td>'
+						+'<td>'+customerList[i].company+'</td>'
+						+'<td><div class="am-btn-toolbar"><div class="am-btn-group am-btn-group-xs">'
+        				+'<button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location=\'${rc.contextPath}/customer/editCustomer.html?customerId='+customerList[i].customerId+'\'"><span class="am-icon-pencil-square-o"></span> 编辑</button>'
+        				+'<button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="javascript:deleteItem(\''+customerList[i].customerId+'\')"><span class="am-icon-trash-o"></span> 删除</button>'
+      					+'</div></div></td>'
+						+'</tr>'
+						$("#tbody_list1").append(trHtml);
+					}
+				}
+				if(page){
+					$("#totalCount1").text("共"+page.totalCount+"条记录");
+				}
+			}else{
+				alert("获取客户信息失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取客户信息失败！");
+        }  
+    });
+}
+function queryList2(pageNo){
+	if(pageNo){
+		$("#pageNo2").val(pageNo)
+	}else{
+		pageNo=$("#pageNo2").val();
+	}
+	param = $("#searchForm2").serialize();
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/customer/ajax/listTemporaryStorage.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				$("#tbody_list2").empty();
+				var customerList = data.data[0];
+				var page = data.data[1];
+				
+				if(customerList.length>0){
+					for(var i=0;i<customerList.length;i++){
+						var trHtml='<tr><td><input type="checkbox" value="'+customerList[i].customerId+'"/></td>'
+						+'<td>'+customerList[i].name+'</td>'
+						+'<td>'+customerList[i].sex+'</td>'
+						+'<td>'+customerList[i].mobile+'</td>'
+						+'<td>'+customerList[i].company+'</td>'
+						+'<td><div class="am-btn-toolbar"><div class="am-btn-group am-btn-group-xs">'
+        				+'<button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location=\'${rc.contextPath}/customer/editCustomer.html?customerId='+customerList[i].customerId+'\'"><span class="am-icon-pencil-square-o"></span> 编辑</button>'
+        				+'<button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="javascript:deleteItem(\''+customerList[i].customerId+'\')"><span class="am-icon-trash-o"></span> 删除</button>'
+      					+'</div></div></td>'
+						+'</tr>'
+						$("#tbody_list2").append(trHtml);
+					}
+				}
+				if(page){
+					$("#totalCount2").text("共"+page.totalCount+"条记录");
+				}
+			}else{
+				alert("获取客户信息失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取客户信息失败！");
+        }  
+    });
+}
+
+function deleteItem(customerId){
+	if(customerId){
+		$('#my-confirm').modal({
+	        relatedTarget: this,
+	        onConfirm: function(options) {
+	          window.location.href='${rc.contextPath}/customer/deleteCustomer.html?customerId='+customerId;
+	        },
+	        // closeOnConfirm: false,
+	        onCancel: function() {
+
+	        }
+	      });
+	}
+}
+
+/**
+ * 查询客户就诊信息
+ */
+function listConsumption(customerId){
+	var tbody = $("#consumption_tbody");
+	var $modal=$("#consumption_modal");
+	var param = "customerId="+customerId;
+	tbody.empty();
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/consumption/ajax/getConsumptionInfo.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				var consumptionInfo = data.data;
+				
+				if(consumptionInfo.length>0){
+					for(var i=0;i<consumptionInfo.length;i++){
+						var trHtml='<tr><td>'+consumptionInfo[i].consumptionDate+'</td>'
+						+'<td>'+consumptionInfo[i].itemName+'</td>'
+						+'<td>'+consumptionInfo[i].cardType+'</td>'
+						+'<td>'+consumptionInfo[i].cardNo+'</td>'
+						+'<td>'+consumptionInfo[i].itemCost+'</td>'
+						+'<td></td>'
+						+'</tr>'
+						tbody.append(trHtml);
+					}
+				}
+			}else{
+				alert("获取就诊信息失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取就诊信息失败！");
+        }  
+    });
+	$modal.modal();
+}
+</script>

@@ -1,0 +1,42 @@
+package com.allen.web.dao;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.ProjectItem;
+import com.allen.web.model.ProjectItemExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 
+* @ClassName: ProjectItemMapper 
+* @Description: 图样-项目 Mapper 
+* @author wenquan
+* @date 2016年7月7日 下午3:08:53 
+*
+ */
+public interface ProjectItemMapper extends GenericDao<ProjectItem, String>{
+    int countByExample(ProjectItemExample example);
+
+    int deleteByExample(ProjectItemExample example);
+
+    int deleteByPrimaryKey(String pi);
+
+    int insert(ProjectItem record);
+
+    int insertSelective(ProjectItem record);
+
+    List<ProjectItem> selectByExample(ProjectItemExample example);
+
+    List<ProjectItem> selectByExample(ProjectItemExample example, Page<ProjectItem> page);
+
+    ProjectItem selectByPrimaryKey(String pi);
+
+    int updateByExampleSelective(@Param("record") ProjectItem record, @Param("example") ProjectItemExample example);
+
+    int updateByExample(@Param("record") ProjectItem record, @Param("example") ProjectItemExample example);
+
+    int updateByPrimaryKeySelective(ProjectItem record);
+
+    int updateByPrimaryKey(ProjectItem record);
+}

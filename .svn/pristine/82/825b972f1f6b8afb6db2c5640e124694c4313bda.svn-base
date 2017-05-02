@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.allen.web.dao.CustomerInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.allen.web.model.CustomerInfo" >
+    <id column="customer_id" property="customerId" jdbcType="CHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="cert_type" property="certType" jdbcType="CHAR" />
+    <result column="certificate_no" property="certificateNo" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="policy_no" property="policyNo" jdbcType="VARCHAR" />
+    <result column="is_precheck" property="isPrecheck" jdbcType="CHAR" />
+    <result column="customer_type" property="customerType" jdbcType="CHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="fellow_id" property="fellowId" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="CHAR" />
+    <result column="is_ts" property="isTs" jdbcType="CHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    customer_id, name, sex, mobile, province, city, address, email, cert_type, certificate_no, 
+    birthday, policy_no, is_precheck, customer_type, company, fellow_id, is_valid, is_ts, 
+    create_user_id, create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.allen.web.model.CustomerInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from customer_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from customer_info
+    where customer_id = #{customerId,jdbcType=CHAR}
+  </select>
+  <select id="selectCustomerByCustomCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    a.customer_id, a.name, a.sex, a.mobile, a.province, a.city, a.address, a.email, a.cert_type, a.certificate_no, a.birthday, a.policy_no, a.is_precheck, a.customer_type, a.company, a.fellow_id, a.is_valid, a.is_ts, a.create_user_id, a.create_time
+    from customer_info a left join card_info b on a.customer_id = b.customer_id left join card_sample_company c on b.project_id = c.project_id
+   	where 1=1
+   	<if test="name!=null and name!=''">
+   	and a.name like '%#{name,jdbcType=VARCHAR})%'
+   	</if>
+   	<if test="mobile!=null and mobile!=''">
+   	and a.mobile like '%#{mobile,jdbcType=VARCHAR})%'
+   	</if>
+   	<if test="certificateNo!=null and certificateNo!=''">
+   	and a.certificate_no like '%#{certificateNo,jdbcType=VARCHAR})%'
+   	</if>
+   	<if test="companyId!=null and companyId!=''">
+   	and c.company_id = #{companyId,jdbcType=CHAR}
+   	</if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from customer_info
+    where customer_id = #{customerId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.allen.web.model.CustomerInfoExample" >
+    delete from customer_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.allen.web.model.CustomerInfo" >
+    insert into customer_info (customer_id, name, sex, 
+      mobile, province, city, 
+      address, email, cert_type, 
+      certificate_no, birthday, policy_no, 
+      is_precheck, customer_type, company, 
+      fellow_id, is_valid, is_ts, 
+      create_user_id, create_time)
+    values (#{customerId,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{certType,jdbcType=CHAR}, 
+      #{certificateNo,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{policyNo,jdbcType=VARCHAR}, 
+      #{isPrecheck,jdbcType=CHAR}, #{customerType,jdbcType=CHAR}, #{company,jdbcType=VARCHAR}, 
+      #{fellowId,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, #{isTs,jdbcType=CHAR}, 
+      #{createUserId,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.allen.web.model.CustomerInfo" >
+    insert into customer_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="certType != null" >
+        cert_type,
+      </if>
+      <if test="certificateNo != null" >
+        certificate_no,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="policyNo != null" >
+        policy_no,
+      </if>
+      <if test="isPrecheck != null" >
+        is_precheck,
+      </if>
+      <if test="customerType != null" >
+        customer_type,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="fellowId != null" >
+        fellow_id,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isTs != null" >
+        is_ts,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="customerId != null" >
+        #{customerId,jdbcType=CHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="certType != null" >
+        #{certType,jdbcType=CHAR},
+      </if>
+      <if test="certificateNo != null" >
+        #{certificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="policyNo != null" >
+        #{policyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isPrecheck != null" >
+        #{isPrecheck,jdbcType=CHAR},
+      </if>
+      <if test="customerType != null" >
+        #{customerType,jdbcType=CHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="fellowId != null" >
+        #{fellowId,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="isTs != null" >
+        #{isTs,jdbcType=CHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.allen.web.model.CustomerInfoExample" resultType="java.lang.Integer" >
+    select count(*) from customer_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update customer_info
+    <set >
+      <if test="record.customerId != null" >
+        customer_id = #{record.customerId,jdbcType=CHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=CHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.certType != null" >
+        cert_type = #{record.certType,jdbcType=CHAR},
+      </if>
+      <if test="record.certificateNo != null" >
+        certificate_no = #{record.certificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.policyNo != null" >
+        policy_no = #{record.policyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPrecheck != null" >
+        is_precheck = #{record.isPrecheck,jdbcType=CHAR},
+      </if>
+      <if test="record.customerType != null" >
+        customer_type = #{record.customerType,jdbcType=CHAR},
+      </if>
+      <if test="record.company != null" >
+        company = #{record.company,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fellowId != null" >
+        fellow_id = #{record.fellowId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+      <if test="record.isTs != null" >
+        is_ts = #{record.isTs,jdbcType=CHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=CHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update customer_info
+    set customer_id = #{record.customerId,jdbcType=CHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=CHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      cert_type = #{record.certType,jdbcType=CHAR},
+      certificate_no = #{record.certificateNo,jdbcType=VARCHAR},
+      birthday = #{record.birthday,jdbcType=VARCHAR},
+      policy_no = #{record.policyNo,jdbcType=VARCHAR},
+      is_precheck = #{record.isPrecheck,jdbcType=CHAR},
+      customer_type = #{record.customerType,jdbcType=CHAR},
+      company = #{record.company,jdbcType=VARCHAR},
+      fellow_id = #{record.fellowId,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR},
+      is_ts = #{record.isTs,jdbcType=CHAR},
+      create_user_id = #{record.createUserId,jdbcType=CHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.allen.web.model.CustomerInfo" >
+    update customer_info
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="certType != null" >
+        cert_type = #{certType,jdbcType=CHAR},
+      </if>
+      <if test="certificateNo != null" >
+        certificate_no = #{certificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="policyNo != null" >
+        policy_no = #{policyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isPrecheck != null" >
+        is_precheck = #{isPrecheck,jdbcType=CHAR},
+      </if>
+      <if test="customerType != null" >
+        customer_type = #{customerType,jdbcType=CHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="fellowId != null" >
+        fellow_id = #{fellowId,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="isTs != null" >
+        is_ts = #{isTs,jdbcType=CHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where customer_id = #{customerId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.allen.web.model.CustomerInfo" >
+    update customer_info
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      cert_type = #{certType,jdbcType=CHAR},
+      certificate_no = #{certificateNo,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      policy_no = #{policyNo,jdbcType=VARCHAR},
+      is_precheck = #{isPrecheck,jdbcType=CHAR},
+      customer_type = #{customerType,jdbcType=CHAR},
+      company = #{company,jdbcType=VARCHAR},
+      fellow_id = #{fellowId,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=CHAR},
+      is_ts = #{isTs,jdbcType=CHAR},
+      create_user_id = #{createUserId,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where customer_id = #{customerId,jdbcType=CHAR}
+  </update>
+</mapper>

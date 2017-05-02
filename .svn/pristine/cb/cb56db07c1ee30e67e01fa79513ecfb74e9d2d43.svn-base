@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.allen.web.dao.ConsumptionMapper" >
+  <resultMap id="BaseResultMap" type="com.allen.web.model.Consumption" >
+    <id column="consumption_id" property="consumptionId" jdbcType="CHAR" />
+    <result column="card_id" property="cardId" jdbcType="CHAR" />
+    <result column="item_id" property="itemId" jdbcType="CHAR" />
+    <result column="consumption_date" property="consumptionDate" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="CHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="CHAR" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="cost" property="cost" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    consumption_id, card_id, item_id, consumption_date, is_valid, create_user_id, create_user_name, 
+    cost
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.allen.web.model.ConsumptionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from consumption
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from consumption
+    where consumption_id = #{consumptionId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from consumption
+    where consumption_id = #{consumptionId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.allen.web.model.ConsumptionExample" >
+    delete from consumption
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.allen.web.model.Consumption" >
+    insert into consumption (consumption_id, card_id, item_id, 
+      consumption_date, is_valid, create_user_id, 
+      create_user_name, cost)
+    values (#{consumptionId,jdbcType=CHAR}, #{cardId,jdbcType=CHAR}, #{itemId,jdbcType=CHAR}, 
+      #{consumptionDate,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, #{createUserId,jdbcType=CHAR}, 
+      #{createUserName,jdbcType=VARCHAR}, #{cost,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.allen.web.model.Consumption" >
+    insert into consumption
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="consumptionId != null" >
+        consumption_id,
+      </if>
+      <if test="cardId != null" >
+        card_id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="consumptionDate != null" >
+        consumption_date,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="consumptionId != null" >
+        #{consumptionId,jdbcType=CHAR},
+      </if>
+      <if test="cardId != null" >
+        #{cardId,jdbcType=CHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=CHAR},
+      </if>
+      <if test="consumptionDate != null" >
+        #{consumptionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=CHAR},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.allen.web.model.ConsumptionExample" resultType="java.lang.Integer" >
+    select count(*) from consumption
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update consumption
+    <set >
+      <if test="record.consumptionId != null" >
+        consumption_id = #{record.consumptionId,jdbcType=CHAR},
+      </if>
+      <if test="record.cardId != null" >
+        card_id = #{record.cardId,jdbcType=CHAR},
+      </if>
+      <if test="record.itemId != null" >
+        item_id = #{record.itemId,jdbcType=CHAR},
+      </if>
+      <if test="record.consumptionDate != null" >
+        consumption_date = #{record.consumptionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=CHAR},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cost != null" >
+        cost = #{record.cost,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update consumption
+    set consumption_id = #{record.consumptionId,jdbcType=CHAR},
+      card_id = #{record.cardId,jdbcType=CHAR},
+      item_id = #{record.itemId,jdbcType=CHAR},
+      consumption_date = #{record.consumptionDate,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR},
+      create_user_id = #{record.createUserId,jdbcType=CHAR},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      cost = #{record.cost,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.allen.web.model.Consumption" >
+    update consumption
+    <set >
+      <if test="cardId != null" >
+        card_id = #{cardId,jdbcType=CHAR},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=CHAR},
+      </if>
+      <if test="consumptionDate != null" >
+        consumption_date = #{consumptionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=CHAR},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where consumption_id = #{consumptionId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.allen.web.model.Consumption" >
+    update consumption
+    set card_id = #{cardId,jdbcType=CHAR},
+      item_id = #{itemId,jdbcType=CHAR},
+      consumption_date = #{consumptionDate,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=CHAR},
+      create_user_id = #{createUserId,jdbcType=CHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      cost = #{cost,jdbcType=VARCHAR}
+    where consumption_id = #{consumptionId,jdbcType=CHAR}
+  </update>
+</mapper>

@@ -1,0 +1,475 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">卡信息库</strong> / <small>修改</small></div>
+  </div>
+  	<div class="am-container">
+        <form id="frmMain" method="post" class="am-form" action="${rc.contextPath}/card/updateCardInfo.html" data-am-validator>
+          <input type="hidden" name="cardId" value="$!{card.cardId}"/>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              项目名称
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+            <select name="projectName" id="projectName" placeholder="点击选择.." data-am-selected="{searchBox: 1}" disabled="disabled">
+              <option selected value=""></option>
+            #foreach($cardSample in $cardSampleList)
+			  <option value="$!{cardSample.projectName}" #if(${card.projectName}==${cardSample.projectName}) selected #end>$!{cardSample.projectName}</option>
+			#end
+			</select>
+			</div>
+          </div>
+
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              卡类型	
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <select name="cardType" placeholder="点击选择.." data-am-selected required>
+              	 <option selected value=""></option>
+              	#foreach($cardType in $cardTypeMap.entrySet())
+				  <option value="$!{cardType.key}" #if(${card.cardType}==${cardType.key}) selected #end>$!{cardType.value}</option>
+				#end
+			  </select>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+            卡片状态
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+            <select name="cardState" placeholder="点击选择.." data-am-selected required>
+              	 <option selected value=""></option>
+              #foreach($cardState in $cardStateMap.entrySet())
+				  <option value="$!{cardState.key}" #if(${card.cardState}==${cardState.key}) selected #end>$!{cardState.value}</option>
+				#end
+			</select>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             有效期
+            </div>
+            <div class="am-u-sm-4 am-u-md-4">
+				<input type="text" class="am-form-field" placeholder="开始日期" name="startDate" value="$!{card.startDate}" id="my-start-2"  readonly/>
+            </div>
+            <div class="am-u-sm-4 am-u-md-4 am-u-end">
+				<input type="text" class="am-form-field" placeholder="结束日期" name="finishDate" value="$!{card.finishDate}" id="my-end-2"  readonly/>
+            </div>
+          </div>
+          <script>
+  $(function() {
+    var nowTemp = new Date();
+    var nowDay = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0).valueOf();
+    var nowMoth = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), 1, 0, 0, 0, 0).valueOf();
+    var nowYear = new Date(nowTemp.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf();
+    var myStart2 = $('#my-start-2');
+
+    var checkin = myStart2.datepicker({
+      onRender: function(date, viewMode) {
+        // 默认 days 视图，与当前日期比较
+        var viewDate = nowDay;
+
+        switch (viewMode) {
+          // moths 视图，与当前月份比较
+          case 1:
+            viewDate = nowMoth;
+            break;
+          // years 视图，与当前年份比较
+          case 2:
+            viewDate = nowYear;
+            break;
+        }
+
+        return date.valueOf() < viewDate ? 'am-disabled' : '';
+      }
+    }).on('changeDate.datepicker.amui', function(ev) {
+        if (ev.date.valueOf() > checkout.date.valueOf()) {
+          var newDate = new Date(ev.date)
+          newDate.setDate(newDate.getDate());//+1
+          checkout.setValue(newDate);
+        }
+        checkin.close();
+        $('#my-end-2')[0].focus();
+    }).data('amui.datepicker');
+
+    var checkout = $('#my-end-2').datepicker({
+      onRender: function(date, viewMode) {
+        var inTime = checkin.date;
+        var inDay = inTime.valueOf();
+        var inMoth = new Date(inTime.getFullYear(), inTime.getMonth(), 1, 0, 0, 0, 0).valueOf();
+        var inYear = new Date(inTime.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf();
+
+        // 默认 days 视图，与当前日期比较
+        var viewDate = inDay;
+
+        switch (viewMode) {
+          // moths 视图，与当前月份比较
+          case 1:
+            viewDate = inMoth;
+            break;
+          // years 视图，与当前年份比较
+          case 2:
+            viewDate = inYear;
+            break;
+        }
+
+        return date.valueOf() <= viewDate ? 'am-disabled' : '';
+      }
+    }).on('changeDate.datepicker.amui', function(ev) {
+      checkout.close();
+    }).data('amui.datepicker');
+  });
+</script>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             预约电话
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="phone" value="$!{card.phone}" class="am-input-sm" maxlength="25">
+            </div>
+          </div>
+
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             卡号
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="cardNo" value="$!{card.cardNo}" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+          
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             保单号/分单号
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="policyNo" value="$!{card.policyNo}" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              图样
+            </div>
+            <div id="cardSample" class="am-u-sm-8 am-u-md-4 am-u-end">
+				
+            </div>
+          </div>
+            
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              所属人
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+            <input type="hidden" name="customerId" id="customerId" value="$!{card.customerId}"/>
+
+            <button type="button" id="fellowName" onclick="javascript:assignSponsor()" class="am-btn am-btn-default">
+            	#foreach($customer in $customerList)
+				  #if(${card.customerId}==${customer.customerId}) $!{customer.name} #end
+				#end
+				
+				#if(${card.customerId}=='') 点击选择 #end
+            </button>
+			  
+			  
+            </div>
+          </div>
+            
+		 <table class="am-table">
+		    <thead>
+		        <tr>
+		            <th colSpan="7">包含项目</th>
+		        </tr>
+		        <tr>
+		        	<td>序号</td>
+		        	<td>项目</td>
+		        	<td>金额</td>
+		        	<td>总次数</td>
+		        	<td>已用次数</td>
+		        	<td>剩余次数</td>
+		        </tr>
+		    </thead>
+		    <tbody id="item_tbody">
+		    </tbody>
+	    </table>
+        </form>
+      </div>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+
+
+<div class="am-modal am-modal-confirm am-margin" tabindex="-1" id="company-confirm">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">选择所属人</div>
+    <div class="am-modal-bd" id="companyActivity">
+      	<form action="" id="assignUserForm" class="am-form-inline">
+      		<input type="hidden" name="pageNo" id="pageNo"/>
+      		<div class="am-form-group">
+			    <input type="text" name="nameSearch" id="nameSearch" class="am-form-field" placeholder="姓名">
+			 </div>
+			 <div class="am-form-group">
+			    <input type="text" name="phoneSearch" id="phoneSearch" class="am-form-field" placeholder="手机号">
+			 </div>
+			  <button type="button" id="userInfoSearchBtn" class="am-btn am-btn-default">查询</button>
+      		<div class="am-g am-margin-top">
+          <div id="boxes" class="am-scrollable-vertical">
+
+   		  </div> 		
+          </div>
+      	</form>
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+    </div>
+  </div>
+</div>
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+$(function(){
+	$("#projectName").next().find("button").addClass("am-disabled")
+	if($("#projectName").val()){
+		initCardImage();
+		loadMedicalItems(initCardItemInfo);
+	}
+	$("#submitBtn").click(function(){
+		$("#frmMain").submit();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/card/listCardInfo.html';
+	});
+	$("#projectName").change(function(){
+		initCardImage();
+	});
+	$("#userInfoSearchBtn").click(function(){
+		query();
+	});
+});
+
+function initCardImage(){
+	var pram={"projectName": $("#projectName").val()};
+	$.ajax( {
+        type : 'post',  
+        url : '${rc.contextPath}/card/ajax/getCardSample.json',
+		data : pram,
+        dataType : 'json',  
+        success : function(data,textStatus){  
+        	if(data.success=="false"){
+        		return;
+        	}
+        	$("#cardSample").html("<img src='${rc.contextPath}"+data.cardImage+"'/>")
+        },  
+        error : function(data,textstatus){  
+        }  
+    });  
+}
+
+function initCardItemInfo(itemList){
+    var tbody=$("#item_tbody");
+	tbody.empty(); 
+	var param={"projectName": $("#projectName").val()};
+	$.ajax( {
+        type : 'post',  
+        url : '${rc.contextPath}/card/ajax/getProjectItem.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data,textStatus){  
+        	if(data.success){
+        		var map = new Map(); 
+        		for(var i=0;i<itemList.length;i++)
+        			map.put(itemList[i].itemId,itemList[i]);
+        	}
+        	for(var i=0;i<data.data.length;i++){
+        		var t_html="<tr><td>"+(i+1)+"</td>"
+        		+"<td>"+map.get(data.data[i].itemId).itemName+"</td>"
+        		+"<td>"+map.get(data.data[i].itemId).itemCost+"</td>"
+        		+"<td>"+data.data[i].totalCount+"</td>"
+        		+"<td>"+0+"</td>"
+        		+"<td>"+data.data[i].totalCount+"</td>"
+        		
+        		+"</tr>"
+        		tbody.append(t_html);
+        	}
+        },  
+        error : function(data,textstatus){  
+        }  
+    });  
+}
+
+function loadMedicalItems(callback){
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/item/ajax/getMedicalItems.json',
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				$.AMUI.progress.done();
+// 				loadExistingItems(projectId,data.data);
+				callback.apply(this,[data.data]);
+			}else{
+				alert("获取诊疗项目列表操作失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取诊疗项目列表操作失败！");
+        }  
+    });
+}
+
+
+/**
+ * 分配同行人
+ */
+function assignSponsor(){
+	$("#boxes").empty();
+	loadUser();
+	$('#company-confirm').modal({
+        relatedTarget: this,
+        onConfirm: function(options) {
+        	var userId = $("input[type='radio']:checked").val();
+        	$("#customerId").val(userId);
+        	var param = {'userId':userId};
+        	$.ajax({
+        		type : 'post',
+                url : '${rc.contextPath}/customer/ajax/getUserInfoById.json',
+        		data : param,
+                dataType : 'json',  
+                success : function(data){
+        			if(data.success){
+        				var name = data.data.name;
+        				$("#fellowName").html(name);
+        			}else{
+        				alert("获取人员信息失败！");
+        			}
+                },  
+                error : function(data,textstatus){
+        			alert("获取人员信息失败！");
+                }  
+            });
+        },
+      //  closeViaDimmer: false,
+        // closeOnConfirm: false,
+        onCancel: function() {
+        	$("#nameSearch").val(""); 
+        	$("#phoneSearch").val(""); 
+        	$("#pageNo").val(""); 
+        }
+      });
+}
+
+/**
+ * 遮罩层条件查询，分页查询
+ */
+function query(pageNo){
+	if(pageNo){
+		$("#pageNo").val(pageNo);
+	}
+	$("#boxes").empty();
+	loadUser();
+}
+
+/**
+ * 获取客户信息
+ */
+function loadUser(){
+	var nameSearch = $("#nameSearch").val();
+	var phoneSearch = $("#phoneSearch").val();
+	var pageNo = $("#pageNo").val();
+	var param = {'nameSearch':nameSearch,'phoneSearch':phoneSearch,'pageNo':pageNo};
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/customer/ajax/getUserInfo.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				if(data.data.length>0){
+						createUserInfoBoxes(data.data);
+				}else{
+					createUserInfoBoxes(null);
+				}
+			}else{
+				alert("获取人员信息失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取人员信息失败！");
+        }  
+    });
+}
+
+//创建用户信息html
+function createUserInfoBoxes(userInfos){
+	var userInfoHtml = '<table class="am-table am-table-bordered am-table-centered">'
+    +'<thead>'
+    +'<tr>'
+    +'<th>&nbsp;</th>'
+    +'  <th>姓名</th>'
+    +'  <th>性别</th>'
+    +'  <th>手机</th>'
+    +'  <th>邮箱</th>'
+    +'</tr>'
+    +'</thead>'
+    +'<tbody>'
+     if(userInfos){
+		for(var i=1;i<userInfos.length;i++){
+			
+			userInfoHtml = userInfoHtml+'<tr>'
+			+'<td><input type="radio" name="userId" value="'+userInfos[i].customerId+'"/></td>'
+			+'<td>'+userInfos[i].name+'</td>'
+			+'<td>'+userInfos[i].sex+'</td>'
+			+'<td>'+userInfos[i].mobile+'</td>'
+			+'<td>'+userInfos[i].email+'</td>'
+			+'</tr>'
+			
+		}
+		
+		userInfoHtml = userInfoHtml+'</tbody>'
+		+'</table>'
+		+'<div class="am-cf">'
+		+'共'+userInfos[0].totalCount+'条记录'
+		+'<div class="am-fr">'
+		+'<ul class="am-pagination">'
+		+'<li' 
+		if(userInfos[0].pageNo=='1'){
+			userInfoHtml = userInfoHtml+' class="am-disabled"'
+		}
+		userInfoHtml = userInfoHtml+'><a href="javascript:query(1)">«</a></li>'
+		if(userInfos[0].totalPages>0){
+			for(var i=1;i<=userInfos[0].totalPages;i++){
+				userInfoHtml = userInfoHtml+'<li'
+				if(i==userInfos[0].pageNo){
+					userInfoHtml = userInfoHtml+' class="am-active"'
+				+'><a href="javascript:query('+i+')">'+i+'</a></li>'
+				}
+			}
+		}else{
+			userInfoHtml = userInfoHtml+'<li class="am-active"><a href="javascript:query(1)">1</a></li>'
+		}
+		userInfoHtml = userInfoHtml+'<li'
+		if(userInfos[0].pageNo==userInfos[0].totalPages){
+			userInfoHtml = userInfoHtml+' class="am-disabled"'
+		}
+		userInfoHtml = userInfoHtml+'><a href="javascript:query('+userInfos[0].totalPages+')">»</a></li>'
+		+'   </ul>'
+		+' </div>'
+		+'</div>'
+    } 
+	
+	$(userInfoHtml).appendTo("#boxes");
+}
+
+</script>

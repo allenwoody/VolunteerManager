@@ -1,0 +1,31 @@
+package com.allen.web.dao;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.CustomerChannel;
+import com.allen.web.model.CustomerChannelExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface CustomerChannelMapper extends GenericDao<CustomerChannel, String>{
+    int countByExample(CustomerChannelExample example);
+
+    int deleteByExample(CustomerChannelExample example);
+
+    int deleteByPrimaryKey(String ccId);
+
+    int insert(CustomerChannel record);
+
+    int insertSelective(CustomerChannel record);
+
+    List<CustomerChannel> selectByExample(CustomerChannelExample example);
+
+    CustomerChannel selectByPrimaryKey(String ccId);
+
+    int updateByExampleSelective(@Param("record") CustomerChannel record, @Param("example") CustomerChannelExample example);
+
+    int updateByExample(@Param("record") CustomerChannel record, @Param("example") CustomerChannelExample example);
+
+    int updateByPrimaryKeySelective(CustomerChannel record);
+
+    int updateByPrimaryKey(CustomerChannel record);
+}

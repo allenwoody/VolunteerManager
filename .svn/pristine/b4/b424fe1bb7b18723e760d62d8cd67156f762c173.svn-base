@@ -1,0 +1,39 @@
+package com.allen.web.service.region;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.SProvinceMapper;
+import com.allen.web.model.SProvince;
+import com.allen.web.model.SProvinceExample;
+
+@Service
+public class ProvinceServiceImpl extends GenericServiceImpl<SProvince, Long>implements ProvinceService {
+
+	@Resource
+	SProvinceMapper provinceMapper;
+	
+	@Override
+	public List<SProvince> selectList(Page<SProvince> page) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SProvince> selectList() {
+		SProvinceExample example = new SProvinceExample();
+		return this.provinceMapper.selectByExample(example);
+	}
+
+	@Override
+	public GenericDao<SProvince, Long> getDao() {
+		return this.provinceMapper;
+	}
+
+}

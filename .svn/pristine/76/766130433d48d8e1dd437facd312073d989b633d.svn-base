@@ -1,0 +1,8 @@
+package com.allen.web.service.card;
+
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.CardSampleOrganization;
+
+public interface CardSampleOrganizationService extends GenericService<CardSampleOrganization, String>{
+
+}

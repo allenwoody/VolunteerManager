@@ -1,0 +1,216 @@
+#set($jquery="$")
+<!DOCTYPE html>
+<html>
+<!-- BEGIN HEAD -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>用户管理</title>
+  <meta name="description" content="新增用户">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="${rc.contextPath}/assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="${rc.contextPath}/assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link rel="stylesheet" href="${rc.contextPath}/assets/css/style.css">
+  <link rel="stylesheet" href="${rc.contextPath}/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="${rc.contextPath}/assets/css/admin.css">
+  <link rel="stylesheet" href="${rc.contextPath}/assets/css/bootstrap.min.css">
+	
+  <script src="${rc.contextPath}/assets/js/jquery.min.js"></script>
+  <script src="${rc.contextPath}/assets/js/bootstrap.min.js"></script>
+  <script src="${rc.contextPath}/assets/js/amazeui.min.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+  <link href="${rc.contextPath}/assets/css/ui.fancytree.css" rel="stylesheet" type="text/css">
+  <script src="${rc.contextPath}/assets/js/jquery.fancytree.js" type="text/javascript"></script>
+  <script src="${rc.contextPath}/assets/js/jquery.fancytree.filter.js" type="text/javascript"></script>
+  <script src="${rc.contextPath}/assets/js/jquery.fancytree.edit.js" type="text/javascript"></script>
+  <script src="${rc.contextPath}/assets/js/jquery.fancytree.glyph.js" type="text/javascript"></script>
+  <script src="${rc.contextPath}/assets/js/jquery.fancytree.table.js" type="text/javascript"></script>
+  <script src="${rc.contextPath}/assets/js/jquery.fancytree.wide.js" type="text/javascript"></script>
+	
+	<!--[if lt IE 9]>
+	<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+	<script src="${rc.contextPath}/assets/js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+	
+	<!--[if (gte IE 9)|!(IE)]><!-->
+	<!--<![endif]-->
+	
+	
+<style type="text/css">
+  /* Define custom width and alignment of table columns */
+  #treetable {
+    height:100px;
+    table-layout: fixed;
+  }
+  #treetable tr td:nth-of-type(1) {
+    text-align: right;
+  }
+  #treetable tr td:nth-of-type(2) {
+    text-align: center;
+  }
+  #treetable tr td:nth-of-type(3) {
+    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fancytree-container {
+	  height: 500px;
+	  overflow: auto;
+	  position: relative;
+	}
+</style>
+
+
+<!-- Add code to initialize the tree when the document is loaded: -->
+<script type="text/javascript">
+  glyph_opts = {
+    map: {
+      doc: "glyphicon glyphicon-file",
+      docOpen: "glyphicon glyphicon-file",
+      checkbox: "glyphicon glyphicon-unchecked",
+      checkboxSelected: "glyphicon glyphicon-check",
+      checkboxUnknown: "glyphicon glyphicon-share",
+      dragHelper: "glyphicon glyphicon-play",
+      dropMarker: "glyphicon glyphicon-arrow-right",
+      error: "glyphicon glyphicon-warning-sign",
+      expanderClosed: "glyphicon glyphicon-plus-sign",
+      expanderLazy: "glyphicon glyphicon-plus-sign",  // glyphicon-expand
+      expanderOpen: "glyphicon glyphicon-minus-sign",  // glyphicon-collapse-down
+      folder: "glyphicon glyphicon-folder-close",
+      folderOpen: "glyphicon glyphicon-folder-open",
+      loading: "glyphicon glyphicon-refresh glyphicon-spin"
+    }
+  };
+  $(function(){
+    // Initialize Fancytree
+
+    $("#treetable").fancytree({
+      extensions: ["filter", "edit", "glyph", "table"],
+      checkbox: true,
+      selectMode: 1,
+      select: function(event, data) {
+          // Display list of selected nodes
+          var selNodes = data.tree.getSelectedNodes();
+          if(selNodes.length>0){
+	          var selKeys = $.map(selNodes, function(node){
+	              $("#orgId").val(node.key);
+	              $("#btn_org").text(node.title);
+	           });
+          }
+          $("#org-modal-1").modal('close');
+        },
+      filter: {
+          autoApply: true,  // Re-apply last filter if lazy data is loaded
+    	  autoCollapse: true,
+    	  autoScroll: true,
+          counter: true,  // Show a badge with number of matching child nodes near parent icons
+          focusOnSelect: true,
+          fuzzy: false,  // Match single characters in order, e.g. 'fb' will match 'FooBar'
+          hideExpandedCounter: true,  // Hide counter badge, when parent is expanded
+          highlight: true,  // Highlight matches by wrapping inside <mark> tags
+          mode: "hide"  // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+        },
+      glyph: glyph_opts,
+      source: {url: "${rc.contextPath}/organization/getOrgTree.json", debugDelay: 200},
+      table: {
+    	indentation: 20,      // indent 20px per node level
+        checkboxColumnIdx: 1,
+        nodeColumnIdx: 2
+      },
+
+      activate: function(event, data) {
+      },
+      lazyLoad: function(event, data) {
+        data.result = {url: "ajax-sub2.json", debugDelay: 500};
+      },
+      renderColumns: function(event, data) {
+        var node = data.node;
+        ${jquery}tdList = $(node.tr).find("td");
+        ${jquery}tdList.eq(0).text(node.getIndexHier());
+//         var orgId = node.key;
+//         var oprations = '<div class="am-btn-toolbar"><div class="am-btn-group am-btn-group-xs"><button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location=\'${rc.contextPath}/organization/addOrganization.html?orgId='+ orgId +'\'"><span class="am-icon-pencil-square-o"></span> 新建</button><button type="button" class="am-btn am-btn-default am-btn-xs am-text-warning" onclick="location=\'${rc.contextPath}/organization/editOrganization.html?orgId='+ orgId +'\'"><span class="am-icon-pencil-square-o"></span> 编辑</button><button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="javascript:deleteItem(\''+orgId+'\')"><span class="am-icon-trash-o"></span> 删除</button></div></div>';
+//         ${jquery}tdList.eq(3).html(oprations);
+      }
+    });
+    
+    var tree = $("#treetable").fancytree("getTree");
+    /*
+     * Event handlers for our little demo interface
+     */
+    $("input[name=search]").keyup(function(e){
+      var n,
+        opts = {
+          autoExpand: true,
+          leavesOnly: false
+        },
+        match = $(this).val();
+
+      if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+        $("button#btnResetSearch").click();
+        return;
+      }
+      if($("#regex").is(":checked")) {
+        // Pass function to perform match
+        n = tree.filterNodes(function(node) {
+          return new RegExp(match, "i").test(node.title);
+        }, opts);
+      } else {
+        // Pass a string to perform case insensitive matching
+        n = tree.filterNodes(match, opts);
+      }
+      $("button#btnResetSearch").attr("disabled", false);
+      $("span#matches").text("(" + n + " matches)");
+    }).focus();
+
+    $("button#btnResetSearch").click(function(e){
+      $("input[name=search]").val("");
+      $("span#matches").text("");
+      tree.clearFilter();
+    }).attr("disabled", true);
+
+    $("fieldset input:checkbox").change(function(e){
+      var id = $(this).attr("id"),
+        flag = $(this).is(":checked");
+
+      switch( id ) {
+      case "autoExpand":
+      case "regex":
+      case "leavesOnly":
+        // Re-apply filter only
+        break;
+      case "hideMode":
+        tree.options.filter.mode = flag ? "hide" : "dimm";
+        break;
+      case "counter":
+      case "fuzzy":
+      case "hideExpandedCounter":
+      case "highlight":
+        tree.options.filter[id] = flag;
+        break;
+      }
+      tree.clearFilter();
+      $("input[name=search]").keyup();
+    });
+
+    $("#counter,#hideExpandedCounter,#highlight").prop("checked", true);
+  });
+</script>
+</head>
+<!-- END HEAD -->
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+	$screen_content
+<script src="${rc.contextPath}/assets/js/app.js"></script>
+
+</body>
+	
+</html>

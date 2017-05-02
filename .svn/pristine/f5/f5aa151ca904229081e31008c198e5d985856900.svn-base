@@ -1,0 +1,20 @@
+package com.allen.web.service.region;
+
+import java.util.List;
+
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.SCity;
+
+public interface CityService extends GenericService<SCity, Long>{
+
+	/**
+	 * 
+	* @Title: selectCityByProvince 
+	* @Description: 按省份查询城市
+	* @param @param provinceId
+	* @param @return    设定文件 
+	* @return List<SCity>    返回类型 
+	* @throws
+	 */
+	public List<SCity> selectCityByProvince(Long provinceId);
+}

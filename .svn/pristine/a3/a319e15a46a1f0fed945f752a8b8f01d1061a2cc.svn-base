@@ -1,0 +1,55 @@
+package com.allen.web.service.audit;
+
+import java.util.List;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.AuditTask;
+
+/**
+ * 
+* @ClassName: AuditTaskService 
+* @Description: 审核任务Service 
+* @author wenquan
+* @date 2016年8月8日 下午4:42:50 
+*
+ */
+public interface AuditTaskService extends GenericService<AuditTask, String>{
+	
+	/**
+	 * @return 
+	 * @throws Exception 
+	 * 
+	* @Title: createAuditTask 
+	* @Description: 创建审批任务 
+	* @param @param auditTask    设定文件 
+	* @return void    返回类型 
+	* @throws
+	 */
+	int createAuditTask(AuditTask auditTask) throws Exception;
+	/**
+	 * 
+	* @Title: selectToDoList 
+	* @Description: 查询待审查任务列表 
+	* @param @param userId
+	* @param category 
+	* @param page 
+	* @param @return    设定文件 
+	* @return List<AuditTask>    返回类型 
+	* @throws
+	 */
+	List<AuditTask> selectToDoList(String userId, String category, Page<AuditTask> page);
+	
+	/**
+	 * 
+	* @Title: selectCommittedList 
+	* @Description: 查询已提交流程列表 
+	* @param @param userId
+	* @param @param category
+	* @param @param page
+	* @param @return    设定文件 
+	* @return List<AuditTask>    返回类型 
+	* @throws
+	 */
+	List<AuditTask> selectCommittedList(String userId, String category, Page<AuditTask> page);
+}

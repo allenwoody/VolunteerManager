@@ -1,0 +1,31 @@
+package com.allen.web.dao;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.CardItem;
+import com.allen.web.model.CardItemExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface CardItemMapper extends GenericDao<CardItem, String>{
+    int countByExample(CardItemExample example);
+
+    int deleteByExample(CardItemExample example);
+
+    int deleteByPrimaryKey(String ciId);
+
+    int insert(CardItem record);
+
+    int insertSelective(CardItem record);
+
+    List<CardItem> selectByExample(CardItemExample example);
+
+    CardItem selectByPrimaryKey(String ciId);
+
+    int updateByExampleSelective(@Param("record") CardItem record, @Param("example") CardItemExample example);
+
+    int updateByExample(@Param("record") CardItem record, @Param("example") CardItemExample example);
+
+    int updateByPrimaryKeySelective(CardItem record);
+
+    int updateByPrimaryKey(CardItem record);
+}

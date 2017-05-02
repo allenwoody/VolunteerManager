@@ -1,0 +1,37 @@
+package com.allen.web.service.company;
+
+import java.util.List;
+
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.CompanyActivity;
+
+
+public interface CompanyActivityService extends GenericService<CompanyActivity, String>{
+	
+	/**
+	 * 
+	 * <p>Title: getActivityBycompanyId</p>
+	 * <p>Description: 根据公司ID获取公司活动</p>
+	 * @return: List<CompanyActivity>
+	 * @param: @param companyId
+	 * @param: @return
+	 * @throws
+	 * @author: guoliguo
+	 * @Date 2016年8月29日下午3:56:53
+	 */
+	List<CompanyActivity> selectActivityBycompanyId(String companyId);
+	
+	/**
+	 * 
+	 * <p>Title: saveCompanyActivity</p>
+	 * <p>Description: 保存公司活动</p>
+	 * @return: void
+	 * @param: @param companyId
+	 * @param: @param activityList
+	 * @throws
+	 * @author: guoliguo
+	 * @Date 2016年8月29日下午3:57:21
+	 */
+	int saveCompanyActivity(List<CompanyActivity> activityList);
+
+}

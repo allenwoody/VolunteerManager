@@ -1,0 +1,81 @@
+package com.allen.web.service.card;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.CardSampleMapper;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.CardSample;
+import com.allen.web.model.CardSampleExample;
+import com.allen.web.model.CardSampleExample.Criteria;
+import com.allen.web.model.ProjectItem;
+import com.hundsun.jresplus.common.util.StringUtil;
+/**
+ * 
+* @ClassName: CardSampleServiceImpl 
+* @Description: 图样服务实现类
+* @author wenquan
+* @date 2016年7月7日 上午10:33:01 
+*
+ */
+@Service
+public class CardSampleServiceImpl extends GenericServiceImpl<CardSample, String> implements CardSampleService{
+	
+	@Resource
+	CardSampleMapper cardSampleMapper;
+	@Resource
+	ProjectItemService projectItemService;
+	
+	@Override
+	public List<CardSample> selectList() {
+		CardSampleExample example = new CardSampleExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
+		return this.cardSampleMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<CardSample> selectList(Page<CardSample> page, CardSample cardSample) {
+		CardSampleExample example = new CardSampleExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIsValidEqualTo(EnumBool.YES.getCode());
+		if (StringUtil.isNotBlank(cardSample.getProjectName())) {//按项目名称拼接查询条件
+				criteria.andProjectNameLike("%"+cardSample.getProjectName()+"%");
+		}
+		return this.cardSampleMapper.selectByExample(example , page);
+	}
+
+	@Override
+	public int delete(String id) {
+		CardSample record = new CardSample();
+		record.setProjectId(id);
+		record.setIsValid(EnumBool.NO.getCode());
+		return this.cardSampleMapper.updateByPrimaryKeySelective(record);
+	}
+	
+	
+
+	@Override
+	public CardSample selectByProjectName(String projectName) {
+		CardSampleExample example = new CardSampleExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIsValidEqualTo(EnumBool.YES.getCode()).andProjectNameEqualTo(projectName);
+		return this.cardSampleMapper.selectByExample(example).get(0);
+	}
+
+	@Override
+	public List<ProjectItem> selectProjectItemByProjectName(String projectName) {
+		CardSample cardSample = this.selectByProjectName(projectName);
+		return this.projectItemService.getAssignedItemByProjectId(cardSample.getProjectId());
+	}
+
+	@Override
+	public GenericDao<CardSample, String> getDao() {
+		return this.cardSampleMapper;
+	}
+}

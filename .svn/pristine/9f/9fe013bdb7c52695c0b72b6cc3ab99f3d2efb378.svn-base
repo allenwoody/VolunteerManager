@@ -1,0 +1,86 @@
+package com.allen.web.service.card;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.ListUtils;
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.core.util.ApplicationUtils;
+import com.allen.web.dao.MedicalItemMapper;
+import com.allen.web.dao.ProjectItemMapper;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.MedicalItem;
+import com.allen.web.model.MedicalItemExample;
+import com.allen.web.model.ProjectItem;
+import com.allen.web.model.ProjectItemExample;
+
+/**
+ * 
+* @ClassName: ProjectItemServiceImpl 
+* @Description: 图样-诊疗项目Service实现类 
+* @author wenquan
+* @date 2016年7月14日 下午3:09:58 
+*
+ */
+@Service
+public class ProjectItemServiceImpl extends GenericServiceImpl<ProjectItem, String> implements ProjectItemService{
+
+	@Resource
+	ProjectItemMapper projectItemMapper;
+	@Resource
+	MedicalItemMapper medicalItemMapper;
+	
+	@Override
+	public List<ProjectItem> getAssignedItemByProjectId(String projectId) {
+		ProjectItemExample piExample = new ProjectItemExample();
+		piExample.createCriteria().andProjectidEqualTo(projectId);
+		List<ProjectItem> piList = this.projectItemMapper.selectByExample(piExample);
+//		List<String> itemIdList = new ArrayList<>();
+		if (piList.isEmpty()) {
+			return ListUtils.EMPTY_LIST;
+		}
+//		for (ProjectItem projectItem : piList) {
+//			itemIdList.add(projectItem.getItemId());
+//		}
+//		MedicalItemExample itemExample = new MedicalItemExample();
+//		itemExample.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode()).andItemIdIn(itemIdList);
+		return piList;
+	}
+
+	@Override
+	public GenericDao<ProjectItem, String> getDao() {
+		return this.projectItemMapper;
+	}
+
+	@Override
+	public List<ProjectItem> getProjectItemInfo(String projectId) {
+		ProjectItemExample piExample = new ProjectItemExample();
+		piExample.createCriteria().andProjectidEqualTo(projectId);
+		return this.projectItemMapper.selectByExample(piExample);
+	}
+
+	@Override
+	public void assignProjectItem(String projectId, List<String> itemIdList, List<Long> totalCountList) {
+		ProjectItemExample example = new ProjectItemExample();
+		example.createCriteria().andProjectidEqualTo(projectId);
+		this.projectItemMapper.deleteByExample(example );
+		
+		int size = itemIdList.size();
+		ProjectItem model = new ProjectItem();
+		for (int i = 0; i < size; i++) {
+			model.setPi(ApplicationUtils.randomUUID());
+			model.setProjectid(projectId);
+			model.setItemId(itemIdList.get(i));
+			model.setTotalCount(totalCountList.get(i));
+			this.insert(model);
+		}
+	}
+	
+	
+
+}

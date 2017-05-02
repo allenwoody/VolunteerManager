@@ -1,0 +1,103 @@
+package com.allen.web.model;
+
+public class AuditNode {
+    private String nodeId;
+
+    private String taskId;
+
+    private String asigneeId;
+
+    private String asigneeName;
+
+    private String roleId;
+
+    private String roleName;
+
+    private Integer sortCode;
+
+    private String nodeState;
+
+    private String remark;
+
+    private String createDate;
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId == null ? null : nodeId.trim();
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId == null ? null : taskId.trim();
+    }
+
+    public String getAsigneeId() {
+        return asigneeId;
+    }
+
+    public void setAsigneeId(String asigneeId) {
+        this.asigneeId = asigneeId == null ? null : asigneeId.trim();
+    }
+
+    public String getAsigneeName() {
+        return asigneeName;
+    }
+
+    public void setAsigneeName(String asigneeName) {
+        this.asigneeName = asigneeName == null ? null : asigneeName.trim();
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId == null ? null : roleId.trim();
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName == null ? null : roleName.trim();
+    }
+
+    public Integer getSortCode() {
+        return sortCode;
+    }
+
+    public void setSortCode(Integer sortCode) {
+        this.sortCode = sortCode;
+    }
+
+    public String getNodeState() {
+        return nodeState;
+    }
+
+    public void setNodeState(String nodeState) {
+        this.nodeState = nodeState == null ? null : nodeState.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate == null ? null : createDate.trim();
+    }
+}

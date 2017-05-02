@@ -1,0 +1,65 @@
+package com.allen.web.service.channel;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.ChannelMapper;
+import com.allen.web.dao.CustomerChannelMapper;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.Channel;
+import com.allen.web.model.ChannelExample;
+import com.allen.web.model.CustomerChannel;
+import com.allen.web.model.CustomerChannelExample;
+
+/**
+ * 
+* @ClassName: ChannelServiceImpl 
+* @Description: 客户来源渠道服务
+* @author wenquan
+* @date 2016年12月6日 上午10:47:10 
+*
+ */
+@Service
+public class ChannelServiceImpl extends GenericServiceImpl<Channel, String> implements ChannelService{
+
+	@Resource
+	ChannelMapper channelMapper;
+	@Resource
+	CustomerChannelMapper customerChannelMapper;
+	
+	@Override
+	public GenericDao<Channel, String> getDao() {
+		return this.channelMapper;
+	}
+
+	@Override
+	public List<Channel> selectList() {
+		ChannelExample example = new ChannelExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
+		example.setOrderByClause("channel_name");
+		return this.channelMapper.selectByExample(example );
+	}
+
+	@Override
+	public Set<String> selectChannelByCustomerId(String customerId) {
+		CustomerChannelExample example = new CustomerChannelExample();
+		example.createCriteria().andCustomerIdEqualTo(customerId);
+		List<CustomerChannel> list = this.customerChannelMapper.selectByExample(example);
+		int size = list.size();
+		
+		Set<String> channels = new HashSet<>();
+		for (int i = 0; i < size; i++) {
+			channels.add(list.get(i).getChannelId());
+		}
+		return channels;
+	}
+
+	
+}

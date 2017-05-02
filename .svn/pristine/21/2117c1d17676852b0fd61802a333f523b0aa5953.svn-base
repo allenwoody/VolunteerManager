@@ -1,0 +1,110 @@
+package com.allen.web.service.card;
+
+import java.util.List;
+import java.util.Map;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.CardInfo;
+import com.allen.web.model.MedicalItem;
+import com.allen.web.model.UserInSession;
+
+/**
+ * 
+* @ClassName: CardInfoService 
+* @Description: 卡信息Service
+* @author wenquan
+* @date 2016年6月23日 上午9:18:24 
+*
+ */
+public interface CardInfoService extends GenericService<CardInfo, String> {
+
+	/**
+	 * 
+	* @Title: selectList 
+	* @Description: 按搜索条件查询卡信息
+	* @param @param page
+	* @param @param name
+	* @param @param cardInfo
+	* @param @return    设定文件 
+	* @return List<CardInfo>    返回类型 
+	* @throws
+	 */
+	public List<CardInfo> selectList(Page<CardInfo> page, String name, CardInfo cardInfo);
+	/**
+	 * 
+	* @Title: selectByCustomer 
+	* @Description: 按客户查询卡信息 
+	* @param @param customerId
+	* @param @return    设定文件 
+	* @return List<CardInfo>    返回类型 
+	* @throws
+	 */
+	public List<CardInfo> selectByCustomer(String customerId);
+	/**
+	 * 
+	* @Title: insert 
+	* @Description: 插入卡信息及相关数据 
+	* @param @param model
+	* @param @param userInSession
+	* @param @return    设定文件 
+	* @return int    返回类型 
+	* @throws
+	 */
+	int insert(CardInfo model, UserInSession userInSession);
+
+	/**
+	 * 
+	* @Title: submitAuditTask 
+	* @Description: 批量提交审核 
+	* @param @param cardId
+	* @param @param userInSession
+	* @param @return    设定文件 
+	* @return int    返回类型 
+	* @throws
+	 */
+	int submitAuditTask(List<String> cardIdList, UserInSession userInSession);
+	
+	/**
+	 * @Title: insertByExcel 
+	 * @Description: 根据导入的excel数据插入表信息
+	 * @param map
+	 * @param userInSession
+	 * @return
+	 */
+	public String insertByExcel(List<Map> map, UserInSession userInSession);
+	
+	/**
+	 * 
+	* @Title: selectByCardNo 
+	* @Description: 按cardNo查询卡信息 
+	* @param @param cardNo
+	* @param @return    设定文件 
+	* @return List<CardInfo>    返回类型 
+	* @throws
+	 */
+	List<CardInfo> selectByCardNo(String cardNo);
+	
+	/**
+	 * 
+	* @Title: isToUseUp 
+	* @Description: 判断卡的该项目是否剩余可用次数
+	* @param @param cardId
+	* @param @param itemId
+	* @param @return    设定文件 
+	* @return boolean    返回类型 
+	* @throws
+	 */
+	boolean isItemUsedUp(String cardId, String itemId);
+	
+	/**
+	 * 
+	* @Title: isCardUsedUp 
+	* @Description: 判断卡是否使用完所有包含项目的次数 
+	* @param @param cardId
+	* @param @return    设定文件 
+	* @return boolean    返回类型 
+	* @throws
+	 */
+	boolean isCardUsedUp(String cardId);
+}

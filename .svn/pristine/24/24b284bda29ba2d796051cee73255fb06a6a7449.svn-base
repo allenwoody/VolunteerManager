@@ -1,0 +1,147 @@
+package com.allen.web.service.audit;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.core.util.ApplicationUtils;
+import com.allen.web.dao.AuditProcedureMapper;
+import com.allen.web.dao.AuditTaskMapper;
+import com.allen.web.enums.EnumAuditState;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.AuditNode;
+import com.allen.web.model.AuditProcedure;
+import com.allen.web.model.AuditProcedureExample;
+import com.allen.web.model.AuditTask;
+import com.allen.web.model.AuditTaskExample;
+import com.allen.web.model.Role;
+import com.allen.web.model.User;
+import com.allen.web.service.role.RoleService;
+
+/**
+ * 
+* @ClassName: AuditTaskServiceImpl 
+* @Description: 审核任务Service实现类 
+* @author wenquan
+* @date 2016年8月8日 下午4:56:37 
+*
+ */
+@Service
+public class AuditTaskServiceImpl extends GenericServiceImpl<AuditTask, String> implements AuditTaskService{
+
+	private final static Logger logger = LoggerFactory.getLogger(AuditTaskServiceImpl.class);
+	
+	@Resource
+	AuditTaskMapper auditTaskMapper;
+	@Resource
+	AuditNodeService auditNodeService;
+	@Resource
+	AuditProcedureMapper auditProcedureMapper;
+	@Resource
+	RoleService roleService;
+	
+	@Override
+	public int createAuditTask(AuditTask auditTask) throws Exception {
+		/*插入任务表*/
+		int c = this.insert(auditTask);
+		int j = 0;
+		logger.info("插入审批任务");
+		/*初始化任务节点信息*/
+		AuditProcedureExample apExample = new AuditProcedureExample();
+		apExample.createCriteria().andCategoryEqualTo(auditTask.getCategory());
+		apExample.setOrderByClause("is_origin desc");
+		List<AuditProcedure> apList = this.auditProcedureMapper.selectByExample(apExample);
+		if (apList.isEmpty()) {
+			throw new Exception("审批流程未定义");
+		}
+		AuditNode auditNode = new AuditNode();
+		int size = apList.size();
+		int currentNode = 1;
+		for (int i=0;i<size;i++) {
+			AuditProcedure auditProcedure = apList.get(i);
+			Role role = this.roleService.selectById(auditProcedure.getRoleId());
+			auditNode.setNodeId(ApplicationUtils.randomUUID());
+			auditNode.setTaskId(auditTask.getTaskId());
+			if (auditProcedure.getIsOrigin().equals(EnumBool.YES.getCode())) {
+				auditNode.setAsigneeId(auditTask.getCreateUserId());
+				auditNode.setAsigneeName(auditTask.getCreateUserName());
+				auditNode.setNodeState(EnumAuditState.PASS.getCode());
+				currentNode = i+2;
+			}else {
+				List<User> userList = this.roleService.selectUserOwnRole(role.getRoleId());
+				if(!userList.isEmpty()){
+					auditNode.setAsigneeId(userList.get(0).getUserId());
+					auditNode.setAsigneeName(userList.get(0).getUsername());
+				}else {
+					throw new Exception("审批相关角色用户缺失");
+				}
+				if (currentNode==(i+1)) {
+					auditNode.setNodeState(EnumAuditState.VERIFYING.getCode());
+				}else {
+					auditNode.setNodeState(EnumAuditState.PENDING.getCode());
+				}
+			}
+			auditNode.setCreateDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+			auditNode.setRoleId(auditProcedure.getRoleId());
+			auditNode.setSortCode(i+1);
+		
+			auditNode.setRoleName(role.getRoleName());
+			
+			j = j+this.auditNodeService.insert(auditNode);
+		}
+		logger.info("插入审批节点："+j+"个");
+		return j+c;
+	}
+
+	
+	@Override
+	public GenericDao<AuditTask, String> getDao() {
+		return this.auditTaskMapper;
+	}
+
+
+	@Override
+	public List<AuditTask> selectToDoList(String userId, String category, Page<AuditTask> page) {
+		List<AuditNode> nodeList = this.auditNodeService.selectPendent(userId);
+		List<String> taskIdList = new ArrayList<>();
+		if (nodeList.isEmpty()) {
+			return new ArrayList<AuditTask>();
+		}
+		for (AuditNode auditNode : nodeList) {
+			taskIdList.add(auditNode.getTaskId());
+		}
+		AuditTaskExample example = new AuditTaskExample();
+		example.createCriteria().andTaskIdIn(taskIdList).andCategoryEqualTo(category);
+		example.setOrderByClause("task_state ASC,create_date DESC,task_name ASC");
+		return this.auditTaskMapper.selectByExample(example, page);
+	}
+
+
+	@Override
+	public List<AuditTask> selectCommittedList(String userId, String category, Page<AuditTask> page) {
+		List<AuditNode> nodeList = this.auditNodeService.selectCommittedNode(userId);
+		List<String> taskIdList = new ArrayList<>();
+		if (nodeList.isEmpty()) {
+			return new ArrayList<AuditTask>();
+		}
+		for (AuditNode auditNode : nodeList) {
+			taskIdList.add(auditNode.getTaskId());
+		}
+		AuditTaskExample example = new AuditTaskExample();
+		example.createCriteria().andTaskIdIn(taskIdList).andCategoryEqualTo(category);
+		example.setOrderByClause("task_state ASC,create_date DESC,task_name ASC");
+		return this.auditTaskMapper.selectByExample(example, page);
+	}
+
+
+}

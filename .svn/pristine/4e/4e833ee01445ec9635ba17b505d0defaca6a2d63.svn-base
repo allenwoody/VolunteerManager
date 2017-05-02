@@ -1,0 +1,118 @@
+package com.allen.web.service.audit;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.AuditNodeMapper;
+import com.allen.web.enums.EnumAuditCategory;
+import com.allen.web.enums.EnumAuditState;
+import com.allen.web.model.AuditNode;
+import com.allen.web.model.AuditNodeExample;
+import com.allen.web.model.AuditTask;
+import com.allen.web.model.CardInfo;
+import com.allen.web.service.card.CardInfoService;
+
+/**
+ * 
+* @ClassName: AuditNodeServiceImpl 
+* @Description: 审批节点Service实现类 
+* @author wenquan
+* @date 2016年8月8日 下午4:54:46 
+*
+ */
+@Service
+public class AuditNodeServiceImpl extends GenericServiceImpl<AuditNode, String>implements AuditNodeService {
+	private static Logger logger = LoggerFactory.getLogger(AuditNodeServiceImpl.class);
+	@Resource
+	AuditNodeMapper auditNodeMapper;
+	@Resource
+	AuditTaskService auditTaskService;
+	@Resource
+	CardInfoService cardInfoService;
+	
+	@Override
+	public GenericDao<AuditNode, String> getDao() {
+		return this.auditNodeMapper;
+	}
+
+	@Override
+	public List<AuditNode> selectPendent(String userId) {
+		AuditNodeExample example = new AuditNodeExample();
+		example.createCriteria().andAsigneeIdEqualTo(userId).andNodeStateEqualTo(EnumAuditState.VERIFYING.getCode()).andSortCodeNotEqualTo(1);
+		return this.auditNodeMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<AuditNode> selectCommittedNode(String userId) {
+		AuditNodeExample example = new AuditNodeExample();
+		example.createCriteria().andAsigneeIdEqualTo(userId).andNodeStateNotEqualTo(EnumAuditState.PENDING.getCode()).andNodeStateNotEqualTo(EnumAuditState.VERIFYING.getCode());
+		return this.auditNodeMapper.selectByExample(example);
+	}
+
+	@Override
+	public int auditPass(List<String> nodeIdList) {
+		int i = 0;
+		AuditNode model = new AuditNode();
+		for (String nodeId : nodeIdList) {
+			model.setNodeId(nodeId);
+			model.setNodeState(EnumAuditState.PASS.getCode());
+			i=i+this.update(model);
+			AuditNode currentNode = this.auditNodeMapper.selectByPrimaryKey(nodeId);
+			AuditNodeExample example = new AuditNodeExample();
+			example.createCriteria().andTaskIdEqualTo(currentNode.getTaskId()).andSortCodeEqualTo(currentNode.getSortCode()+1);
+			List<AuditNode> l = this.auditNodeMapper.selectByExample(example);
+			if (l.isEmpty()) {//为空则审批task已完结,更改task及原记录审核状态
+				AuditTask task = new AuditTask();
+				task.setTaskId(currentNode.getTaskId());
+				task.setTaskState(EnumAuditState.PASS.getCode());
+				i = i + this.auditTaskService.update(task);
+				task = this.auditTaskService.selectById(currentNode.getTaskId());
+				if (task.getCategory().equals(EnumAuditCategory.CARD.getCode())) {
+					CardInfo cardInfo = new CardInfo();
+					cardInfo.setCardId(task.getRootId());
+					cardInfo.setAuditState(EnumAuditState.PASS.getCode());
+					this.cardInfoService.update(cardInfo );
+				}
+			}else {
+				AuditNode nextNode = l.get(0);
+				nextNode.setNodeState(EnumAuditState.VERIFYING.getCode());
+				i=i+this.update(nextNode);
+			}
+		}
+		return i;
+	}
+
+	@Override
+	public int auditRefused(List<String> nodeIdList, String remark) {
+		int i = 0;
+		AuditNode model = new AuditNode();
+		for (String nodeId : nodeIdList) {
+			model.setNodeId(nodeId);
+			model.setNodeState(EnumAuditState.REFUSED.getCode());
+			model.setRemark(remark);
+			i=i+this.update(model);
+			AuditNode currentNode = this.auditNodeMapper.selectByPrimaryKey(nodeId);
+			AuditTask task = new AuditTask();
+			task.setTaskId(currentNode.getTaskId());
+			task.setTaskState(EnumAuditState.REFUSED.getCode());
+			i = i + this.auditTaskService.update(task);
+		}
+		return i;
+	}
+
+	@Override
+	public List<AuditNode> selectNodeByTask(String taskId) {
+		AuditNodeExample example = new AuditNodeExample();
+		example.createCriteria().andTaskIdEqualTo(taskId);
+		example.setOrderByClause("sort_code");
+		return this.auditNodeMapper.selectByExample(example);
+	}
+
+}

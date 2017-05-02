@@ -1,0 +1,131 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+    <div class="am-cf am-padding">
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页文件维护</strong> / <small>查询</small></div>
+    </div>
+
+    <div class="am-g">
+    <form id="searchForm" action="${rc.contextPath}/homepageFile/listHomepageFile.html" method="post" >
+     <input type="hidden" id="pageNo" name="pageNo"/>
+      <div class="am-u-sm-12 am-u-md-6">
+        <div class="am-btn-toolbar">
+          <div class="am-btn-group am-btn-group-xs">
+            <button type="button" id="addBtn" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+            <!-- <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button> -->
+          </div>
+        </div>
+      </div>
+      <div class="am-u-sm-12 am-u-md-3 am-u-end">
+        <div class="am-input-group am-input-group-sm">
+          <input type="text" name="fileNameSearch" value="$!{homepageFile.realName}" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" id="searchBtn" type="button">搜索</button>
+          </span>
+        </div>
+      </div>
+      </form>
+    </div>
+
+    <div class="am-g">
+      <div class="am-u-sm-12">
+        <form class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" /></th>
+                <th class="table-title">文件名称</th>
+                <th class="table-title">上传人</th>
+                <th class="table-title">上传时间</th>
+                <th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody>
+          	#foreach($homepageFile in $homepageFileList)
+            <tr>
+              <td><input type="checkbox" value="$!{homepageFile.id}"/></td>
+              <td><a href="${rc.contextPath}$!{homepageFile.path}">$!{homepageFile.realName}</a></td>
+              <td>$!{homepageFile.createUser}</td>
+              <td>$!date.format('yyyy-MM-dd HH:mm:ss ',$!homepageFile.createTime)</td>
+              <td>
+                <div class="am-btn-toolbar">
+                  <div class="am-btn-group am-btn-group-xs">
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="javascript:deleteFile('$!{homepageFile.id}')"><span class="am-icon-trash-o"></span> 删除</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            #end
+          </tbody>
+        </table>
+          <div class="am-cf">
+  共 ${page.totalCount} 条记录
+  <div class="am-fr">
+    <ul class="am-pagination">
+      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:query(1)">«</a></li>
+      #if(${page.totalPages}>0)
+      #foreach($foo in [1..${page.totalPages}])
+      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:query($foo)">$foo</a></li>
+      #end
+      #else
+      <li class="am-active"><a href="javascript:query(1)">1</a></li>
+      #end
+      
+      <li #if(${page.pageNo}==${page.totalPages}||${page.totalPages}=='0') class="am-disabled" #end><a href="javascript:query(${page.totalPages})">»</a></li>
+    </ul>
+  </div>
+</div>
+          <hr />
+          <p>注：.....</p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+ </div>
+
+
+ #admin_sidebar_sm
+ #confirm
+ #admin_footer
+ 
+ 
+<script type="text/javascript">
+$(function(){
+	$("#addBtn").click(function(){
+		window.location.href='${rc.contextPath}/homepageFile/addFile.html';
+	});
+	$("#searchBtn").click(function(){		
+		query();
+	});
+	
+});
+
+
+function query(pageNo){
+	if(pageNo){
+		$("#pageNo").val(pageNo);
+	}
+	$("#searchForm").submit();
+	
+}
+
+function deleteFile(id){
+	if(id){
+		$('#my-confirm').modal({
+	        relatedTarget: this,
+	        onConfirm: function(options) {
+	          window.location.href='${rc.contextPath}/homepageFile/deleteFile.html?id='+ id;
+								},
+								// closeOnConfirm: false,
+								onCancel : function() {
+
+								}
+							});
+		}
+	}
+
+
+</script>

@@ -1,0 +1,103 @@
+package com.allen.web.model;
+
+public class Consumption {
+    private String consumptionId;
+
+    private String customId;
+
+    private String cardId;
+
+    private String itemId;
+
+    private String customItem;
+
+    private String consumptionDate;
+
+    private String createUserId;
+
+    private String createUserName;
+
+    private String cost;
+
+    private String isValid;
+
+    public String getConsumptionId() {
+        return consumptionId;
+    }
+
+    public void setConsumptionId(String consumptionId) {
+        this.consumptionId = consumptionId == null ? null : consumptionId.trim();
+    }
+
+    public String getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(String customId) {
+        this.customId = customId == null ? null : customId.trim();
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId == null ? null : cardId.trim();
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId == null ? null : itemId.trim();
+    }
+
+    public String getCustomItem() {
+        return customItem;
+    }
+
+    public void setCustomItem(String customItem) {
+        this.customItem = customItem == null ? null : customItem.trim();
+    }
+
+    public String getConsumptionDate() {
+        return consumptionDate;
+    }
+
+    public void setConsumptionDate(String consumptionDate) {
+        this.consumptionDate = consumptionDate == null ? null : consumptionDate.trim();
+    }
+
+    public String getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId == null ? null : createUserId.trim();
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName == null ? null : createUserName.trim();
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost == null ? null : cost.trim();
+    }
+
+    public String getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(String isValid) {
+        this.isValid = isValid == null ? null : isValid.trim();
+    }
+}

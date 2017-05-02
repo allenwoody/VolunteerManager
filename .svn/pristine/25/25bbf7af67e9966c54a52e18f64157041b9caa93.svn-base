@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<toolbox scope="request">
+	<xhtml>true</xhtml>
+    <tool key="link" class="org.apache.velocity.tools.view.LinkTool"/>
+	<tool>
+		<key>stringUtils</key>
+		<scope>application</scope>
+		<class>org.apache.commons.lang3.StringUtils</class>
+	</tool>
+
+	<tool>
+		<key>shiro</key>
+		<!-- 可选默认为 shiro -->
+		<scope>application</scope>
+		<class>com.allen.core.util.Permission</class>
+	</tool>
+</toolbox>

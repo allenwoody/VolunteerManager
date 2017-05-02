@@ -1,0 +1,162 @@
+/* Write your styles */
+.swiper-container {
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.doc-example {
+  border: 1px solid #eee;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  padding: 0 15px 15px;
+}
+
+@media screen and (min-width: 876px)
+.top {
+    margin: 0 auto;
+    width: 1000px;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
+/*header begin*/
+.header{
+    background-color:#e95377;
+	box-shadow: 0 1px 4px pink;
+    height: 55px;
+    margin: auto;
+    line-height: 55px;
+	position: fixed;
+	top:0;
+	z-index: 1000;
+	width: 100%;
+}
+.nav{
+    width:80%;
+    margin-left: 10%;
+}
+.header .nav a{
+    text-decoration: none;
+    color:#ffffff;
+}
+.bamaLogo{
+    display:inline-block;
+    overflow: hidden;
+}
+.header ul{
+    padding: 0;
+    margin: 0 auto;
+    display:block;
+}
+.nav-items .am-u-sm-2{
+    width:20%;
+	padding:0;
+}
+.header .nav-items li{
+    list-style: none;
+    float: left;
+    display:block;
+    text-align: center;
+    color:#ffffff;
+    font-size: 16px;
+}
+.am-menu-sub{
+    width:100%;
+    position: absolute;
+}
+
+.header .am-menu-sub li{
+    display: block;
+    text-align: center;
+    line-height: 40px;
+    background-color:#ee7090;
+	font-size:14px;
+}
+@media and (max-width: 959px){
+	.am-menu-sub{
+		font-size:10px;
+	}
+}
+.header .am-menu-sub li:hover{
+	text-decoration:underline;
+}
+.nav-items .am-u-sm-2:hover{
+    background: #ee7090;
+}
+.search{
+    position: absolute;
+    right:10px;
+}
+.search, .search span {
+    display: inline-block;
+}
+.search input{
+    height: 25px;
+    border:0;
+    border-radius: 5px 0 0 5px;
+    width:150px;
+    font-size: 12px;
+}
+.search .zoom{
+    background-color:#636063;
+    /*vertical-align: center;*/
+    margin: 0;
+    width: 30px;
+    height:26px;
+    margin-left: -4.5px;
+    border-radius: 0 5px 5px 0;
+}
+/*header end*/
+
+.thumbnail-fixed{
+	max-width: 400px;
+}
+
+
+
+
+.am-g .del
+{
+	/*影响文档流的属性（比如：visibility,position, float,align等）。*/
+	display: inline-block;
+	/*自身盒模型的属性（比如：width, height, margin, padding, border等）。*/
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	margin-left:5px;
+	/*排版相关属性（比如：font, text-align, vertical-align等等）。*/
+	vertical-align: middle;
+	/*装饰性属性（比如：color, background-~~等）*/
+	background: url('../img/YP.png') no-repeat scroll 0px -35px transparent;
+}
+
+.am-g .del:hover {
+    background-position: 0px -51px;
+}
+
+.boxes .addbtn{
+	float:right;
+}
+
+
+/*Step*/
+.step{margin:15px 25px 30px;}
+.step li{float:left;height:40px;text-align:center;background:url(../img/step.png) 50% 0 no-repeat;list-style:none;position:relative}
+	li.first{background-position:50% -700px}
+	li.current{background-position:50% -100px}
+	li.current_first{background-position:50% -400px}
+	li.current_last{background-position:50% -600px}
+	li.lit{background-position:50% -200px}
+	li.lit_first{background-position:50% -500px}
+	li.last{background-position:50% -300px}
+
+.step b{display:inline-block;text-align:center;padding:3px 0 0;font-size:16px;color:#fff}li.lit b,li.lit_first b{display:none}
+.step p{position:absolute;width:100%;top:40px;left:0;}li.current p,li.current_first p,li.current_last p{color:#007DC0}
+.step span{display:block;position:absolute;width:100%;top:60px;left:0;}

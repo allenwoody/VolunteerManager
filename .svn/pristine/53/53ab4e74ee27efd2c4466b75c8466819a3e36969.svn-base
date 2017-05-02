@@ -1,0 +1,68 @@
+package com.allen.web.model;
+
+/**
+ * 
+* @ClassName: ConsumptionVo 
+* @Description: 消费记录新增VO 
+* @author wenquan
+* @date 2016年7月29日 下午4:46:38 
+*
+ */
+public class ConsumptionVo extends CardItem{
+
+	String consumptionDate;
+	String createUserId;
+	String createUserName;
+	String cost;
+	String customItem;
+	String customerId;
+
+	public String getCost() {
+		return cost;
+	}
+
+	public void setCost(String cost) {
+		this.cost = cost;
+	}
+
+	public String getConsumptionDate() {
+		return consumptionDate;
+	}
+
+	public void setConsumptionDate(String consumptionDate) {
+		this.consumptionDate = consumptionDate;
+	}
+
+	public String getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+
+	public String getCustomItem() {
+		return customItem;
+	}
+
+	public void setCustomItem(String customItem) {
+		this.customItem = customItem;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	
+}

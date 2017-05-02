@@ -1,0 +1,73 @@
+package com.allen.web.service.audit;
+
+import java.util.List;
+
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.AuditNode;
+
+/**
+ * 
+* @ClassName: AuditNodeService 
+* @Description: 审核节点Service 
+* @author wenquan
+* @date 2016年8月8日 下午4:44:10 
+*
+ */
+public interface AuditNodeService extends GenericService<AuditNode, String>{
+
+	/**
+	 * 
+	* @Title: selectPendent 
+	* @Description: 获取指定用户的待审节点信息 
+	* @param @param userId
+	* @param @return    设定文件 
+	* @return List<AuditNode>    返回类型 
+	* @throws
+	 */
+	public List<AuditNode> selectPendent(String userId);
+	
+	/**
+	 * 
+	* @Title: selectCommittedNode 
+	* @Description: 查询已提交的事项节点 
+	* @param @param userId
+	* @param @return    设定文件 
+	* @return List<AuditNode>    返回类型 
+	* @throws
+	 */
+	public List<AuditNode> selectCommittedNode(String userId);
+	
+	/**
+	 * 
+	* @Title: auditPass 
+	* @Description: 批量审核通过
+	* @param @param nodeIdList
+	* @param @return    设定文件 
+	* @return int    返回类型 
+	* @throws
+	 */
+	int auditPass(List<String> nodeIdList);
+
+	/**
+	 * @param remark TODO
+	 * 
+	* @Title: auditRefused 
+	* @Description: 批量审核不通过 
+	* @param @param nodeIdList
+	* @param @return    设定文件 
+	* @return int    返回类型 
+	* @throws
+	 */
+	int auditRefused(List<String> nodeIdList, String remark);
+	
+	/**
+	 * 
+	* @Title: selectNodeByTask 
+	* @Description: 查询任务的所有节点 
+	* @param @param taskId
+	* @param @return    设定文件 
+	* @return List<AuditNode>    返回类型 
+	* @throws
+	 */
+	List<AuditNode> selectNodeByTask(String taskId);
+}

@@ -1,0 +1,199 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+    <div class="am-cf am-padding">
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">待办事项</strong> / <small>审核</small></div>
+    </div>
+
+    <div class="am-g">
+        <form id="frmMain" class="am-form">
+      <div class="am-u-sm-12">
+	          <div class="am-btn-group am-btn-group-xs">
+	            <button type="button" id="auditPassBtn" class="am-btn am-btn-primary"><span class="am-icon-edit"></span> 批量审核通过</button>
+	            <button type="button" id="auditRefusedBtn" class="am-btn am-btn-warning"><span class="am-icon-edit"></span> 批量审核不通过</button>
+	          </div>
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input id="main-control-checkbox" type="checkbox" /></th>
+                <th class="table-title">流程名称</th>
+                <th class="table-title">卡号</th>
+                <th class="table-date">提交日期</th>
+                <th class="table-title">提交人</th>
+                <th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody>
+          	#foreach($data in $dataMap.entrySet())
+            <tr>
+              <td><input type="checkbox" name="nodeId" value="$!{data.key}"/></td>
+              <td>$!{data.value.get(0).taskName}</td>
+              <td>$!{data.value.get(1).cardNo}</td>
+              <td>$!{data.value.get(0).createDate}</td>
+              <td>$!{data.value.get(0).createUserName}</td>
+              <td>
+                <div class="am-btn-toolbar">
+                  <div class="am-btn-group am-btn-group-xs">
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="javascript:auditProgress('$!{data.key.taskId}')"><span class="am-icon-pencil-square-o"></span> 查看审核</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            #end
+          </tbody>
+        </table>
+          <div class="am-cf">
+  共 ${page.totalCount} 条记录
+  <div class="am-fr">
+    <ul class="am-pagination">
+      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:query(1)">«</a></li>
+      #if(${page.totalPages}>0)
+      #foreach($foo in [1..${page.totalPages}])
+      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:query($foo)">$foo</a></li>
+      #end
+      #else
+      <li class="am-active"><a href="javascript:query(1)">1</a></li>
+      #end
+      
+      <li #if(${page.pageNo}==${page.totalPages}) class="am-disabled" #end><a href="javascript:query(${page.totalPages})">»</a></li>
+    </ul>
+  </div>
+</div>
+          <hr />
+          <p>注：.....</p>
+      </div>
+        </form>
+
+    </div>
+  </div>
+ </div>
+ 
+ <div class="am-modal am-modal-no-btn" tabindex="-1" id="progress-modal">
+  <div class="am-modal-dialog">
+    <div class="am-modal-bd">
+    	<ul class="step clearfix">
+			<li class="lit_first" style="width:33%"><b>1</b><p>保险管理员</p></li>
+			<li class="current" style="width:34%"><b>2</b><p>保险总监</p></li>
+			<li class="last" style="width:33%"><b>3</b><p>副总裁</p></li>
+		</ul>
+    </div>
+  </div>
+</div>
+
+<div class="am-modal am-modal-prompt" tabindex="-1" id="refused-prompt">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">审批意见</div>
+    <div class="am-modal-bd">
+      请输入审批不通过的理由
+      <input type="text" class="am-modal-prompt-input">
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+      <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+    </div>
+  </div>
+</div> 
+ #admin_sidebar_sm
+ #confirm
+ #admin_footer
+<script type="text/javascript">
+$(function(){
+	$("#auditPassBtn").click(function(){
+		auditPass();
+	});
+	$("#auditRefusedBtn").click(function(){
+		auditRefused();
+	});
+	$("#searchBtn").click(function(){		
+		query();
+	});
+});
+
+
+function query(pageNo){
+	if(pageNo){
+		$("#pageNo").val(pageNo);
+	}
+	$("#searchForm").submit();
+	
+}
+
+function auditPass(){
+	if($("input[name='nodeId']:checked").size()<1){
+		alert("请选择要审批的条目");
+		return false;
+	}
+	$.AMUI.progress.start();
+	 var nodeIdList = new Array(); 
+	 $("input[name='nodeId']:checked").each(function(){
+		 nodeIdList.push($(this).val());
+	 });
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/schedule/ajax/auditPass.json',
+		data : {'nodeIdList':nodeIdList},
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				$.AMUI.progress.done();
+				location.reload();
+			}else{
+				alert("操作失败！");
+				$.AMUI.progress.remove();
+			}
+        },  
+        error : function(data,textstatus){
+			alert("操作失败！");
+			$.AMUI.progress.remove();
+        }  
+    });
+	
+}
+
+function auditRefused(){
+	if($("input[name='nodeId']:checked").size()<1){
+		alert("请选择要审批的条目");
+		return false;
+	}
+	$('#refused-prompt').modal({
+	      relatedTarget: this,
+	      onConfirm: function(e) {
+	    	  $.AMUI.progress.start();
+	    		 var nodeIdList = new Array(); 
+	    		 $("input[name='nodeId']:checked").each(function(){
+	    			 nodeIdList.push($(this).val());
+	    		 });
+	    		$.ajax({
+	    			type : 'post',
+	    	        url : '${rc.contextPath}/schedule/ajax/auditRefused.json',
+	    			data : {'nodeIdList':nodeIdList,'remark':e.data},
+	    	        dataType : 'json',  
+	    	        success : function(data){
+	    				if(data.success){
+	    					$.AMUI.progress.done();
+	    					location.reload();
+	    				}else{
+	    					alert("操作失败！");
+	    					$.AMUI.progress.remove();
+	    				}
+	    	        },  
+	    	        error : function(data,textstatus){
+	    				alert("操作失败！");
+	    				$.AMUI.progress.remove();
+	    	        }  
+	    	    });
+	      },
+	      onCancel: function(e) {
+	        
+	      }
+	    });
+}
+
+function auditProgress(taskId){
+	var $modal = $("#progress-modal");
+	$modal.modal();
+}
+
+</script>

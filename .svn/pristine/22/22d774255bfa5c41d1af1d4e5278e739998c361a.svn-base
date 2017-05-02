@@ -1,0 +1,52 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">角色管理</strong> / <small>编辑</small></div>
+  </div>
+  	<div class="am-container">
+        <form id="frmMain" class="am-form" action="${rc.contextPath}/role/updateRole.html" method="post" data-am-validator>
+          <input type="hidden" name="roleId" value="$!{role.roleId}">
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              角色名
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="roleName" value="$!{role.roleName}" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             角色标识
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="roleSign" value="$!{role.roleSign}" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+            
+
+        </form>
+      </div>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-default  am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+$(function(){
+	$("#submitBtn").click(function(){
+		$("#frmMain").submit();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/role/listRole.html';
+	});
+	
+});
+</script>

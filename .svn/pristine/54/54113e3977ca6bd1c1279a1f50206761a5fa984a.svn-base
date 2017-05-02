@@ -1,0 +1,106 @@
+package com.allen.web.service.consumption;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.core.util.ApplicationUtils;
+import com.allen.web.dao.ConsumptionMapper;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.CardInfo;
+import com.allen.web.model.CardItem;
+import com.allen.web.model.Consumption;
+import com.allen.web.model.ConsumptionExample;
+import com.allen.web.model.ConsumptionVo;
+import com.allen.web.service.card.CardInfoService;
+import com.allen.web.service.card.CardItemService;
+/**
+ * 
+* @ClassName: ConsumptionServiceImpl 
+* @Description: 消费记录Service实现类 
+* @author wenquan
+* @date 2016年7月25日 下午3:21:44 
+*
+ */
+@Service
+public class ConsumptionServiceImpl extends GenericServiceImpl<Consumption, String> implements ConsumptionService{
+
+	@Resource
+	ConsumptionMapper consumptionMapper;
+	@Resource
+	CardInfoService cardInfoService;
+	@Resource
+	CardItemService cardItemService;
+	
+	@Override
+	public List<Consumption> selectConsumptionByCustomer(String customerId) {
+//		List<CardInfo> cardInfoList = this.cardInfoService.selectByCustomer(customerId);//TODO
+//		List<String> cardIdList = new ArrayList<>();
+//		for (CardInfo cardInfo : cardInfoList) {
+//			cardIdList.add(cardInfo.getCardId());
+//		}
+		ConsumptionExample example = new ConsumptionExample();
+//		if (cardIdList.isEmpty()) {
+//			return ListUtils.EMPTY_LIST;
+//		}
+		example.createCriteria().andCustomIdEqualTo(customerId);
+		example.setOrderByClause("consumption_date desc");
+		return this.consumptionMapper.selectByExample(example );
+	}
+	
+	@Override
+	public Consumption selectLastConsumptionDate(String customerId) {
+		List<Consumption> list = this.selectConsumptionByCustomer(customerId);
+		if (list.isEmpty()) {
+			return new Consumption();
+		}
+		return list.get(0);
+	}
+
+	@Override
+	public int insertConsumptionInfo(List<ConsumptionVo> voList) {
+		Consumption consumption = new Consumption();
+		consumption.setIsValid(EnumBool.YES.getCode());
+		int i = 0;
+		for (ConsumptionVo vo: voList) {
+			consumption.setConsumptionId(ApplicationUtils.randomUUID());
+			consumption.setCardId(vo.getCardId());
+			consumption.setItemId(vo.getItemId());
+			consumption.setConsumptionDate(vo.getConsumptionDate());
+			consumption.setCreateUserId(vo.getCreateUserId());
+			consumption.setCreateUserName(vo.getCreateUserName());
+			consumption.setCost(vo.getCost());
+			consumption.setCustomItem(vo.getCustomItem());
+			consumption.setCustomId(vo.getCustomerId());
+			if(StringUtils.isNotBlank(vo.getItemId())){
+				synchronized(ConsumptionServiceImpl.class){
+					CardItem cardItem = this.cardItemService.selectByCardIdAndItemId(vo.getCardId(), vo.getItemId());
+					long totalCount = cardItem.getTotalCount();
+					long usedCount = cardItem.getUsedCount();
+					if(usedCount>=totalCount){
+						return 0;
+					}
+					i = this.insert(consumption);
+					cardItem.setUsedCount(usedCount+1);
+					i = i+this.cardItemService.update(cardItem);
+				}
+			}else{
+				i = this.insert(consumption);
+			}
+		}
+		return i;
+	}
+
+	@Override
+	public GenericDao<Consumption, String> getDao() {
+		return this.consumptionMapper;
+	}
+
+}

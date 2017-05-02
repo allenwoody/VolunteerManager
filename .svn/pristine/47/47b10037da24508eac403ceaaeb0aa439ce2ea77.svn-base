@@ -1,0 +1,34 @@
+package com.allen.web.dao;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericDao;
+import com.allen.web.model.HomepageFile;
+import com.allen.web.model.HomepageFileExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface HomepageFileMapper extends GenericDao<HomepageFile,String>{
+    int countByExample(HomepageFileExample example);
+
+    int deleteByExample(HomepageFileExample example);
+
+    int deleteByPrimaryKey(String id);
+
+    int insert(HomepageFile record);
+
+    int insertSelective(HomepageFile record);
+
+    List<HomepageFile> selectByExample(HomepageFileExample example);
+
+    HomepageFile selectByPrimaryKey(String id);
+
+    int updateByExampleSelective(@Param("record") HomepageFile record, @Param("example") HomepageFileExample example);
+
+    int updateByExample(@Param("record") HomepageFile record, @Param("example") HomepageFileExample example);
+
+    int updateByPrimaryKeySelective(HomepageFile record);
+
+    int updateByPrimaryKey(HomepageFile record);
+
+	List<HomepageFile> selectByExample(HomepageFileExample example, Page<HomepageFile> page);
+}

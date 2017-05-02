@@ -1,0 +1,68 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content" style="min-height:600px">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">机构管理</strong> / <small>修改</small></div>
+  </div>
+  	<div class="am-container">
+        <form id="frmMain" method="post" class="am-form" action="${rc.contextPath}/organization/updateOrganization.html" data-am-validator>
+          <input type="hidden" name="orgId" value="$!{organization.orgId}"/>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              上级机构
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" disabled="disabled" value="${parentOrganization.orgName}" class="am-input-sm" required>
+            </div>
+          </div>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              机构名称
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="orgName" value="$!{organization.orgName}" class="am-input-sm" required>
+            </div>
+          </div>
+
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              机构编号
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="orgCode" value="$!{organization.orgCode}" class="am-input-sm" required>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              机构类型
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="orgType" value="$!orgTypeMap.get(${organization.orgType})" class="am-input-sm" disabled/>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+$(function(){
+	$("#submitBtn").click(function(){
+		$("#frmMain").submit();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/organization/listOrganization.html';
+	});
+	
+});
+</script>

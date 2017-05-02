@@ -1,0 +1,53 @@
+package com.allen.web.model;
+
+public class CardItem {
+    private String ciId;
+
+    private String cardId;
+
+    private String itemId;
+
+    private Long totalCount;
+
+    private Long usedCount;
+
+    public String getCiId() {
+        return ciId;
+    }
+
+    public void setCiId(String ciId) {
+        this.ciId = ciId == null ? null : ciId.trim();
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId == null ? null : cardId.trim();
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId == null ? null : itemId.trim();
+    }
+
+    public Long getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(Long totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public Long getUsedCount() {
+        return usedCount;
+    }
+
+    public void setUsedCount(Long usedCount) {
+        this.usedCount = usedCount;
+    }
+}

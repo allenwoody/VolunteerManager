@@ -1,0 +1,224 @@
+#admin_header
+<div class="am-cf admin-main">
+	#admin_sidebar
+
+	<!-- content start -->
+	<div class="admin-content">
+
+		<div class="am-cf am-padding">
+			<div class="am-fl am-cf">
+				<strong class="am-text-primary am-text-lg">首页</strong> <small></small>
+			</div>
+		</div>
+
+		<!--     <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list "> -->
+		<!--       <li><a href="#" class="am-text-success"><span class="am-icon-btn am-icon-file-text"></span><br/>新增页面<br/>2300</a></li> -->
+		<!--       <li><a href="#" class="am-text-warning"><span class="am-icon-btn am-icon-briefcase"></span><br/>成交订单<br/>308</a></li> -->
+		<!--       <li><a href="#" class="am-text-danger"><span class="am-icon-btn am-icon-recycle"></span><br/>昨日访问<br/>80082</a></li> -->
+		<!--       <li><a href="#" class="am-text-secondary"><span class="am-icon-btn am-icon-user-md"></span><br/>在线用户<br/>3000</a></li> -->
+		<!--     </ul> -->
+
+		<div class="am-g">
+			<div class="am-u-md-6">
+				<!-- <div class="am-panel am-panel-default">
+          <div class="am-panel-hd am-cf" data-am-collapse="{target: '#collapse-panel-2'}">DB卡信息一览<span class="am-icon-chevron-down am-fr" ></span></div>
+          <div id="collapse-panel-2" class="am-in">
+            <table class="am-table am-table-bd am-table-bdrs am-table-striped am-table-hover">
+              <tbody>
+              <tr>
+                <th class="am-text-center">#</th>
+                <th>DB卡</th>
+                <th>网站</th>
+              </tr>
+              #foreach($dbInfo in $dbInfoList)
+              <tr>
+                <td class="am-text-center"></td>
+                <td> $!{dbInfo.dbCardName}</td>
+                <td><a target="_blank" href="$!{dbInfo.website}">$!{dbInfo.webName}</td>
+              </tr>
+              #end
+              </tbody>
+            </table>
+          </div>
+        </div> -->
+			</div>
+
+			<div class="am-u-md-6">
+				<div class="am-panel am-panel-default">
+					<!--  data-am-collapse="{target: '#collapse-panel-4'}"-->
+					<div class="am-panel-hd am-cf">
+
+						<form id="searchForm" class="am-form-inline"
+							action="${rc.contextPath}/index.html" method="post">
+							<input type="hidden" id="pageNo" name="pageNo" />
+							<div class="am-form-group">文件列表</div>
+							<div class="am-form-group">
+								<input type="text" name="fileNameSearch" class="am-form-field"
+									placeholder="文件名搜索" value="$!{homepageFile.realName}">
+							</div>
+
+							<button class="am-btn am-btn-default" id="searchBtn"
+								type="button">搜索</button>
+						</form>
+					</div>
+					<div id="collapse-panel-4" class="am-panel-bd am-collapse am-in">
+
+						<ul class="am-list admin-content-task">
+							#foreach($homepageFile in $homepageFileList)
+							<li>
+								<div class="admin-task-meta">Posted on
+									$!date.format('yyyy-MM-dd HH:mm:ss ',$!homepageFile.createTime)
+									by $!{homepageFile.createUser}</div>
+								<div class="admin-task-bd">
+									<a href="${rc.contextPath}$!{homepageFile.path}">$!{homepageFile.realName}</a>
+								</div>
+							</li> #end
+						</ul>
+						<div class="am-cf">
+							共 ${page.totalCount} 条记录
+							<div class="am-fr">
+								<ul class="am-pagination">
+									<li #if(${page.pageNo}== '1') class="am-disabled" #end><a
+										href="javascript:query(1)">«</a></li> #if(${page.totalPages}>0)
+									#foreach($foo in [1..${page.totalPages}])
+									<li #if($foo==$page.pageNo) class="am-active" #end><a
+										href="javascript:query($foo)">$foo</a></li> #end #else
+									<li class="am-active"><a href="javascript:query(1)">1</a></li>
+									#end
+
+									<li #if(${page.pageNo}==${page.totalPages}||${page.totalPages}=='0') class="am-disabled" #end><a href="javascript:query(${page.totalPages})">»</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="am-u-sm-12">
+				<div class="am-panel am-panel-default">
+					<div class="am-panel-hd am-cf">
+						合作公司
+					</div>
+					<ul data-am-widget="gallery" class=" am-avg-sm-1 am-avg-md-4 am-avg-lg-4 am-gallery-bordered customer-case-content">
+						#foreach($company in $companyMap.keySet())
+						#if($velocityCount==$companyMap.size())
+						<li class="case-li am-u-sm-6 am-u-md-6 am-u-lg-4 am-u-end">
+						#else
+						<li class="case-li am-u-sm-6 am-u-md-6 am-u-lg-4">
+						#end
+							<div class="am-gallery-item case-img1">
+								<a href="#"> <img src="${rc.contextPath}$!{company.companyLogo}" />
+	
+								</a>
+							</div>
+							<div class="case-li-mengban">
+								<div class=" case-word">
+									<h3 class="">$!{company.companyName}</h3>
+									#foreach($activity in $companyMap.get($company))
+									<p><activity-title>$!{activity.activityName} </activity-title></p>
+									#end
+									<a onclick="javascript:assignActivity('$!{company.companyId}')"><span><i class="am-icon-eye"></i>查看更多</span></a>
+								</div>
+							</div>
+						</li>
+						#end
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- content end -->
+
+</div>
+
+<div class="am-modal am-modal-confirm am-margin" tabindex="-1" id="company-confirm">
+  <div class="am-modal-dialog">
+    <div class="am-modal-bd" id="companyActivity">
+            <div class="am-u-sm-4 am-u-md-4 am-text-center am-text-lg">
+           		活动名称
+            </div>
+            <div class="am-u-sm-8 am-u-md-8 am-text-center am-text-lg">
+            	活动内容
+            </div>
+
+          <div id="boxes" class="am-margin-top-xl">
+          
+   		  </div> 		
+    </div>
+  </div>
+</div>
+
+#admin_sidebar_sm #admin_footer
+
+<script type="text/javascript">
+	$(function() {
+		$("#searchBtn").click(function() {
+			query();
+		});
+	});
+
+	function query(pageNo) {
+		if (pageNo) {
+			$("#pageNo").val(pageNo);
+		}
+		$("#searchForm").submit();
+
+	}
+	
+	function assignActivity(companyId){
+		$("#companyId").val(companyId);
+		$("#boxes").empty();
+		loadExistingActivity(companyId);
+		$('#company-confirm').modal({
+	      });
+	}
+	
+	function loadExistingActivity(companyId){
+		var param = "companyId="+companyId;
+		$.ajax({
+			type : 'post',
+	        url : '${rc.contextPath}/company/ajax/getExistingActivity.json',
+			data : param,
+	        dataType : 'json',  
+	        success : function(data){
+				if(data.success){
+					if(data.data.length>0){
+						for(var i=0;i<data.data.length;i++){
+							createActivityBoxes(data.data[i]);
+						}
+					}else{
+						createActivityBoxes(null);
+					}
+				}else{
+					alert("获取分配公司活动操作失败！");
+				}
+	        },  
+	        error : function(data,textstatus){
+				alert("获取分配公司活动操作失败！");
+	        }  
+	    });
+	}
+	
+	
+	function createActivityBoxes(activity){
+		var activityHtml=	
+	    '<div class="unit"><div class="am-g am-margin-top ">'
+	    +'<div class="am-u-sm-4 am-u-md-4">'
+	    +'<p>'
+	    if(activity){
+	    	activityHtml=activityHtml+activity.activityName;
+	    }
+		activityHtml=activityHtml+'</p>'
+	    +'</div>'
+	    +'<div class="am-u-sm-8 am-u-md-8">'
+	    +'<p>'
+	    if(activity){
+	    	activityHtml=activityHtml+activity.activityContent;
+	    }
+	    activityHtml=activityHtml+'</p>'
+	    +'</div>'
+	    +'</div></div>'
+		$(activityHtml).appendTo("#boxes");
+	}
+</script>

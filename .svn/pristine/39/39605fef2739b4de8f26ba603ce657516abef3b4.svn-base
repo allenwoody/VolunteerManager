@@ -1,0 +1,29 @@
+package com.allen.web.service.homepagefile;
+
+import java.util.List;
+
+import com.allen.core.feature.orm.mybatis.Page;
+import com.allen.core.generic.GenericService;
+import com.allen.web.model.HomepageFile;
+
+/**
+ * 
+ * @ClassName: HomepageFileService
+ * @Description: 首页文件维护Service
+ * @author guoliguo
+ * @date 2016年9月8日上午10:22:11
+ */
+public interface HomepageFileService extends GenericService<HomepageFile,String>{
+	
+	/**
+	 * 分页查询文件信息列表
+	 */
+	List<HomepageFile> selectList(Page<HomepageFile> page, HomepageFile homepageFile);
+	
+	/**
+	 * “删除”文件（更改isValid）
+	 */
+	int deleteFile(String id);
+
+
+}

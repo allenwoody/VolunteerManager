@@ -1,0 +1,68 @@
+package com.allen.web.service.card;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.allen.core.generic.GenericDao;
+import com.allen.core.generic.GenericServiceImpl;
+import com.allen.web.dao.CardItemMapper;
+import com.allen.web.dao.MedicalItemMapper;
+import com.allen.web.enums.EnumBool;
+import com.allen.web.model.CardItem;
+import com.allen.web.model.CardItemExample;
+import com.allen.web.model.MedicalItem;
+import com.allen.web.model.MedicalItemExample;
+
+/**
+ * 
+* @ClassName: CardItemServiceImpl 
+* @Description: 卡-诊疗项目Service实现类 
+* @author wenquan
+* @date 2016年7月27日 下午2:59:43 
+*
+ */
+@Service
+public class CardItemServiceImpl extends GenericServiceImpl<CardItem, String> implements CardItemService{
+
+	@Resource
+	CardItemMapper cardItemMapper;
+	@Resource 
+	MedicalItemMapper MedicalItemMapper;
+	
+	@Override
+	public List<MedicalItem> selectItemByCard(String cardId) {
+		List<CardItem> cardItemList = this.selectCardItemByCardId(cardId);
+		List<String> itemIdList = new ArrayList<>();
+		for (CardItem cardItem : cardItemList) {
+			itemIdList.add(cardItem.getItemId());
+		}
+		
+		MedicalItemExample example = new MedicalItemExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode()).andItemIdIn(itemIdList);
+		return MedicalItemMapper.selectByExample(example );
+	}
+
+	@Override
+	public List<CardItem> selectCardItemByCardId(String cardId) {
+		CardItemExample example = new CardItemExample();
+		example.createCriteria().andCardIdEqualTo(cardId);
+		return this.cardItemMapper.selectByExample(example);
+	}
+	
+	@Override
+	public CardItem selectByCardIdAndItemId(String cardId, String ItemId) {
+		CardItemExample example = new CardItemExample();
+		example.createCriteria().andCardIdEqualTo(cardId).andItemIdEqualTo(ItemId);
+		return this.cardItemMapper.selectByExample(example).get(0);
+	}
+
+	@Override
+	public GenericDao<CardItem, String> getDao() {
+		return this.cardItemMapper;
+	}
+
+}

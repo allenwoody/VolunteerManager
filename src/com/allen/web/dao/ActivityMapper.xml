@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allen.web.dao.ActivityMapper">
+  <resultMap id="BaseResultMap" type="com.allen.web.model.Activity">
+    <id column="activity_id" jdbcType="CHAR" property="activityId" />
+    <result column="activity_name" jdbcType="VARCHAR" property="activityName" />
+    <result column="activity_date" jdbcType="DATE" property="activityDate" />
+    <result column="activity_profile" jdbcType="VARCHAR" property="activityProfile" />
+    <result column="activity_address" jdbcType="VARCHAR" property="activityAddress" />
+    <result column="is_valid" jdbcType="CHAR" property="isValid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    activity_id, activity_name, activity_date, activity_profile, activity_address, is_valid
+  </sql>
+  <select id="selectByExample" parameterType="com.allen.web.model.ActivityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from activity
+    where activity_id = #{activityId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from activity
+    where activity_id = #{activityId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.allen.web.model.ActivityExample">
+    delete from activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.allen.web.model.Activity">
+    insert into activity (activity_id, activity_name, activity_date, 
+      activity_profile, activity_address, is_valid
+      )
+    values (#{activityId,jdbcType=CHAR}, #{activityName,jdbcType=VARCHAR}, #{activityDate,jdbcType=DATE}, 
+      #{activityProfile,jdbcType=VARCHAR}, #{activityAddress,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.allen.web.model.Activity">
+    insert into activity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="activityId != null">
+        activity_id,
+      </if>
+      <if test="activityName != null">
+        activity_name,
+      </if>
+      <if test="activityDate != null">
+        activity_date,
+      </if>
+      <if test="activityProfile != null">
+        activity_profile,
+      </if>
+      <if test="activityAddress != null">
+        activity_address,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="activityId != null">
+        #{activityId,jdbcType=CHAR},
+      </if>
+      <if test="activityName != null">
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityDate != null">
+        #{activityDate,jdbcType=DATE},
+      </if>
+      <if test="activityProfile != null">
+        #{activityProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="activityAddress != null">
+        #{activityAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null">
+        #{isValid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.allen.web.model.ActivityExample" resultType="java.lang.Long">
+    select count(*) from activity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update activity
+    <set>
+      <if test="record.activityId != null">
+        activity_id = #{record.activityId,jdbcType=CHAR},
+      </if>
+      <if test="record.activityName != null">
+        activity_name = #{record.activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityDate != null">
+        activity_date = #{record.activityDate,jdbcType=DATE},
+      </if>
+      <if test="record.activityProfile != null">
+        activity_profile = #{record.activityProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityAddress != null">
+        activity_address = #{record.activityAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null">
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update activity
+    set activity_id = #{record.activityId,jdbcType=CHAR},
+      activity_name = #{record.activityName,jdbcType=VARCHAR},
+      activity_date = #{record.activityDate,jdbcType=DATE},
+      activity_profile = #{record.activityProfile,jdbcType=VARCHAR},
+      activity_address = #{record.activityAddress,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.allen.web.model.Activity">
+    update activity
+    <set>
+      <if test="activityName != null">
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="activityDate != null">
+        activity_date = #{activityDate,jdbcType=DATE},
+      </if>
+      <if test="activityProfile != null">
+        activity_profile = #{activityProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="activityAddress != null">
+        activity_address = #{activityAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null">
+        is_valid = #{isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    where activity_id = #{activityId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.allen.web.model.Activity">
+    update activity
+    set activity_name = #{activityName,jdbcType=VARCHAR},
+      activity_date = #{activityDate,jdbcType=DATE},
+      activity_profile = #{activityProfile,jdbcType=VARCHAR},
+      activity_address = #{activityAddress,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=CHAR}
+    where activity_id = #{activityId,jdbcType=CHAR}
+  </update>
+</mapper>

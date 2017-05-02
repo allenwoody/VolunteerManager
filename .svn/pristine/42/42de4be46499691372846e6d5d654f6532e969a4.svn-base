@@ -1,8 +1,0 @@
-package com.allen.web.service.region;
-
-import com.allen.core.generic.GenericService;
-import com.allen.web.model.SProvince;
-
-public interface ProvinceService extends GenericService<SProvince, Long> {
-
-}

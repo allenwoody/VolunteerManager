@@ -1,5 +1,6 @@
 package com.allen.web.dao;
 
+import com.allen.core.feature.orm.mybatis.Page;
 import com.allen.core.generic.GenericDao;
 import com.allen.web.model.Activity;
 import com.allen.web.model.ActivityExample;
@@ -18,6 +19,8 @@ public interface ActivityMapper extends GenericDao<Activity, String>{
     int insertSelective(Activity record);
 
     List<Activity> selectByExample(ActivityExample example);
+
+    List<Activity> selectByExample(ActivityExample example, Page<Activity> page);
 
     Activity selectByPrimaryKey(String activityId);
 

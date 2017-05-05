@@ -1,0 +1,93 @@
+#admin_header
+<div class="am-cf admin-main">
+#admin_sidebar
+<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">志愿者信息</strong> / <small>新增</small></div>
+  </div>
+  	<div class="am-container">
+        <form id="frmMain" class="am-form" action="${rc.contextPath}/volunteer/insertVolunteer.html" method="post" data-am-validator>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              姓名
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="volunteerName" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+              性别
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <select name="sex" placeholder="点击选择.." data-am-selected required>
+              	 <option selected value=""></option>
+              	#foreach($sex in $sexMap.entrySet())
+				  <option value="$!{sex.key}">$!{sex.value}</option>
+				#end
+			  </select>
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             生日
+            </div>
+            <div class="am-u-sm-4 am-u-md-2">
+              <input id="birthday" type="text" class="am-form-field" name="birthday" placeholder="生日"  readonly/>
+            </div>
+            <div id="age" class="am-u-sm-4 am-u-md-2 am-u-end">
+            	
+            </div>
+          </div>
+          
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             手机
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="mobile" class="am-input-sm js-pattern-mobile" maxlength="25" required>
+            </div>
+          </div>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             身份证
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="identityCard" class="am-input-sm" maxlength="18" required>
+            </div>
+          </div>
+          <div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">
+             来源
+            </div>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <input type="text" name="source" class="am-input-sm" maxlength="25" required>
+            </div>
+          </div>
+            
+
+        </form>
+      </div>
+   <div class="am-margin">
+    <button type="button" id="submitBtn" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" id="cancelBtn" class="am-btn am-btn-default  am-btn-xs">放弃保存</button>
+  </div>
+</div>
+</div>
+#admin_sidebar_sm
+#admin_footer
+
+<script type="text/javascript">
+$(function(){
+	$("#submitBtn").click(function(){
+		$("#frmMain").submit();
+	});
+	$("#cancelBtn").click(function(){
+		window.location.href='${rc.contextPath}/volunteer/listVolunteer.html';
+	});
+	
+});
+</script>

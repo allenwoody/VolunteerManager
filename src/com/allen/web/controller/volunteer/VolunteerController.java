@@ -130,4 +130,20 @@ public class VolunteerController extends GenericController{
 		return "redirct:/volunteer/listVolunteer.html";
 	}
 	
+	/**
+	 * 
+	* @Title: deleteVolunteer 
+	* @Description: 删除志愿者 
+	* @param @param volunteerId
+	* @param @param map
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping("/deleteVolunteer")
+	public String deleteVolunteer(@RequestParam(value = "volunteerId", required = false) String volunteerId,
+			ModelMap map) {
+		this.volunteerService.delete(volunteerId);
+		return "redirect:/volunteer/listVolunteer.html";
+	}
 }

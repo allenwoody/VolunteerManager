@@ -38,7 +38,13 @@ public class VolunteerServiceImpl extends GenericServiceImpl<Volunteer, String> 
 		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
 		return this.volunteerMapper.selectByExample(example, page);
 	}
-	
-	
+
+	@Override
+	public int delete(String id) {
+		Volunteer record = new Volunteer();
+		record.setVolunteerId(id);
+		record .setIsValid(EnumBool.NO.getCode());
+		return this.volunteerMapper.updateByPrimaryKeySelective(record);
+	}
 
 }

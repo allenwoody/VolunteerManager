@@ -39,5 +39,12 @@ public class ActivityServiceImpl extends GenericServiceImpl<Activity, String> im
 		return this.activityMapper.selectByExample(example, page);
 	}
 
+	@Override
+	public int delete(String id) {
+		Activity record = new Activity();
+		record.setActivityId(id);
+		record.setIsValid(EnumBool.NO.getCode());
+		return this.activityMapper.updateByPrimaryKey(record);
+	}
 	
 }

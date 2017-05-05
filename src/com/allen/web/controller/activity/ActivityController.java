@@ -127,4 +127,21 @@ public class ActivityController extends GenericController{
 		logger.info("更新志愿活动信息：{}",activity.getActivityName());
 		return "redirct:/Activity/listActivity.html";
 	}
+	
+	/**
+	 * 
+	* @Title: deleteActivity 
+	* @Description: 删除志愿活动 
+	* @param @param activityId
+	* @param @param map
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping("/deleteActivity")
+	public String deleteActivity(@RequestParam(value = "activityId", required = false) String activityId,
+			ModelMap map) {
+		this.activityService.delete(activityId);
+		return "redirect:/activity/listActivity.html";
+	}
 }

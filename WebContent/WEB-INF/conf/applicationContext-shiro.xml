@@ -20,11 +20,11 @@
                 /ueditor/** = anon
                 /upload/images/** = anon
                 <!-- 登录页允许访问 -->
-                /user/login.html = anon
+                /admin/user/login.html = anon
                 <!-- druid监控允许访问 -->
                 /druid/**=anon
                 <!-- 其他资源需要认证 -->
-                /** = authc
+                /admin/** = authc
             </value>
         </property>
     </bean>

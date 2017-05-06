@@ -5,7 +5,7 @@
     <id column="volunteer_id" jdbcType="CHAR" property="volunteerId" />
     <result column="volunteer_name" jdbcType="VARCHAR" property="volunteerName" />
     <result column="sex" jdbcType="CHAR" property="sex" />
-    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="birthday" jdbcType="VARCHAR" property="birthday" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="identity_card" jdbcType="CHAR" property="identityCard" />
@@ -107,7 +107,7 @@
       birthday, mobile, source, 
       identity_card, is_valid)
     values (#{volunteerId,jdbcType=CHAR}, #{volunteerName,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, 
-      #{birthday,jdbcType=DATE}, #{mobile,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
       #{identityCard,jdbcType=CHAR}, #{isValid,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.allen.web.model.Volunteer">
@@ -149,7 +149,7 @@
         #{sex,jdbcType=CHAR},
       </if>
       <if test="birthday != null">
-        #{birthday,jdbcType=DATE},
+        #{birthday,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null">
         #{mobile,jdbcType=VARCHAR},
@@ -184,7 +184,7 @@
         sex = #{record.sex,jdbcType=CHAR},
       </if>
       <if test="record.birthday != null">
-        birthday = #{record.birthday,jdbcType=DATE},
+        birthday = #{record.birthday,jdbcType=VARCHAR},
       </if>
       <if test="record.mobile != null">
         mobile = #{record.mobile,jdbcType=VARCHAR},
@@ -208,7 +208,7 @@
     set volunteer_id = #{record.volunteerId,jdbcType=CHAR},
       volunteer_name = #{record.volunteerName,jdbcType=VARCHAR},
       sex = #{record.sex,jdbcType=CHAR},
-      birthday = #{record.birthday,jdbcType=DATE},
+      birthday = #{record.birthday,jdbcType=VARCHAR},
       mobile = #{record.mobile,jdbcType=VARCHAR},
       source = #{record.source,jdbcType=VARCHAR},
       identity_card = #{record.identityCard,jdbcType=CHAR},
@@ -227,7 +227,7 @@
         sex = #{sex,jdbcType=CHAR},
       </if>
       <if test="birthday != null">
-        birthday = #{birthday,jdbcType=DATE},
+        birthday = #{birthday,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null">
         mobile = #{mobile,jdbcType=VARCHAR},
@@ -248,7 +248,7 @@
     update volunteer
     set volunteer_name = #{volunteerName,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=CHAR},
-      birthday = #{birthday,jdbcType=DATE},
+      birthday = #{birthday,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       source = #{source,jdbcType=VARCHAR},
       identity_card = #{identityCard,jdbcType=CHAR},

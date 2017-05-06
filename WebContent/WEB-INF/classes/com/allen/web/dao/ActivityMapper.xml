@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.allen.web.model.Activity">
     <id column="activity_id" jdbcType="CHAR" property="activityId" />
     <result column="activity_name" jdbcType="VARCHAR" property="activityName" />
-    <result column="activity_date" jdbcType="DATE" property="activityDate" />
+    <result column="activity_date" jdbcType="VARCHAR" property="activityDate" />
     <result column="activity_profile" jdbcType="VARCHAR" property="activityProfile" />
     <result column="activity_address" jdbcType="VARCHAR" property="activityAddress" />
     <result column="is_valid" jdbcType="CHAR" property="isValid" />
@@ -104,7 +104,7 @@
     insert into activity (activity_id, activity_name, activity_date, 
       activity_profile, activity_address, is_valid
       )
-    values (#{activityId,jdbcType=CHAR}, #{activityName,jdbcType=VARCHAR}, #{activityDate,jdbcType=DATE}, 
+    values (#{activityId,jdbcType=CHAR}, #{activityName,jdbcType=VARCHAR}, #{activityDate,jdbcType=VARCHAR}, 
       #{activityProfile,jdbcType=VARCHAR}, #{activityAddress,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}
       )
   </insert>
@@ -138,7 +138,7 @@
         #{activityName,jdbcType=VARCHAR},
       </if>
       <if test="activityDate != null">
-        #{activityDate,jdbcType=DATE},
+        #{activityDate,jdbcType=VARCHAR},
       </if>
       <if test="activityProfile != null">
         #{activityProfile,jdbcType=VARCHAR},
@@ -167,7 +167,7 @@
         activity_name = #{record.activityName,jdbcType=VARCHAR},
       </if>
       <if test="record.activityDate != null">
-        activity_date = #{record.activityDate,jdbcType=DATE},
+        activity_date = #{record.activityDate,jdbcType=VARCHAR},
       </if>
       <if test="record.activityProfile != null">
         activity_profile = #{record.activityProfile,jdbcType=VARCHAR},
@@ -187,7 +187,7 @@
     update activity
     set activity_id = #{record.activityId,jdbcType=CHAR},
       activity_name = #{record.activityName,jdbcType=VARCHAR},
-      activity_date = #{record.activityDate,jdbcType=DATE},
+      activity_date = #{record.activityDate,jdbcType=VARCHAR},
       activity_profile = #{record.activityProfile,jdbcType=VARCHAR},
       activity_address = #{record.activityAddress,jdbcType=VARCHAR},
       is_valid = #{record.isValid,jdbcType=CHAR}
@@ -202,7 +202,7 @@
         activity_name = #{activityName,jdbcType=VARCHAR},
       </if>
       <if test="activityDate != null">
-        activity_date = #{activityDate,jdbcType=DATE},
+        activity_date = #{activityDate,jdbcType=VARCHAR},
       </if>
       <if test="activityProfile != null">
         activity_profile = #{activityProfile,jdbcType=VARCHAR},
@@ -219,7 +219,7 @@
   <update id="updateByPrimaryKey" parameterType="com.allen.web.model.Activity">
     update activity
     set activity_name = #{activityName,jdbcType=VARCHAR},
-      activity_date = #{activityDate,jdbcType=DATE},
+      activity_date = #{activityDate,jdbcType=VARCHAR},
       activity_profile = #{activityProfile,jdbcType=VARCHAR},
       activity_address = #{activityAddress,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=CHAR}

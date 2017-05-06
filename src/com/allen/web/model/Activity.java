@@ -1,13 +1,11 @@
 package com.allen.web.model;
 
-import java.util.Date;
-
 public class Activity {
     private String activityId;
 
     private String activityName;
 
-    private Date activityDate;
+    private String activityDate;
 
     private String activityProfile;
 
@@ -31,12 +29,12 @@ public class Activity {
         this.activityName = activityName == null ? null : activityName.trim();
     }
 
-    public Date getActivityDate() {
+    public String getActivityDate() {
         return activityDate;
     }
 
-    public void setActivityDate(Date activityDate) {
-        this.activityDate = activityDate;
+    public void setActivityDate(String activityDate) {
+        this.activityDate = activityDate == null ? null : activityDate.trim();
     }
 
     public String getActivityProfile() {

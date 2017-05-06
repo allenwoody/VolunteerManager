@@ -26,7 +26,7 @@ import com.allen.web.service.role.RoleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RequestMapping("/role")
+@RequestMapping("/admin/role")
 @Controller
 public class RoleController extends GenericController {
 	
@@ -92,7 +92,7 @@ public class RoleController extends GenericController {
 		if(i==1){
 //			map.put("oprationCode", EnumOpration.INSERT_SUCCESS.getCode());
 		}
-		return "redirect:/role/listRole.html";
+		return "redirect:/admin/role/listRole.html";
 	}
 	
 	/**
@@ -130,7 +130,7 @@ public class RoleController extends GenericController {
 		if(i==1){
 //			map.put("oprationCode", EnumOpration.UPDATE_SUCCESS.getCode());
 		}
-		return "redirect:/role/listRole.html";
+		return "redirect:/admin/role/listRole.html";
 	}
 	
 	@RequestMapping("/deleteRole")
@@ -141,7 +141,7 @@ public class RoleController extends GenericController {
 		if(i==1){
 //			map.put("oprationCode", EnumOpration.DELETE_SUCCESS.getCode());
 		}
-		return "redirect:/role/listRole.html";
+		return "redirect:/admin/role/listRole.html";
 	}
 	
 //	/**

@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @date:2015年8月31日
  */
 @Controller
-@RequestMapping("/permission")
+@RequestMapping("/admin/permission")
 public class PermissionController extends GenericController {
 	@Resource
 	PermissionService permissionService;
@@ -109,7 +109,7 @@ public class PermissionController extends GenericController {
 		model.setDescription(description);
 		model.setSortNo(sortNo);
 		this.permissionService.insert(model);
-		return "redirect:/permission/listPermission.html";
+		return "redirect:/admin/permission/listPermission.html";
 	}
 	/**
 	 * 修改权限
@@ -140,7 +140,7 @@ public class PermissionController extends GenericController {
 			@Valid Permission model,
 			ModelMap map){
 		this.permissionService.update(model);
-		return "redirect:/permission/listPermission.html";
+		return "redirect:/admin/permission/listPermission.html";
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class PermissionController extends GenericController {
 			@RequestParam(value = "permissionId", required = false) String permissionId,
 			ModelMap map){
 		this.permissionService.delete(permissionId);
-		return "redirect:/permission/listPermission.html";
+		return "redirect:/admin/permission/listPermission.html";
 	}
 	
 //	/**

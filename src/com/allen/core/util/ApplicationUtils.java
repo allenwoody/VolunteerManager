@@ -2,12 +2,19 @@ package com.allen.core.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.log4j.chainsaw.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -16,7 +23,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class ApplicationUtils {
 
-	
+	static Logger logger = LoggerFactory.getLogger(ApplicationUtils.class);
     private ApplicationUtils() {
     	
 	}
@@ -146,4 +153,67 @@ public class ApplicationUtils {
   
         return map;  
     }   
+    /**
+     * 
+    * @Title: getYear 
+    * @Description: 获取年份 
+    * @param @param date
+    * @param @return    设定文件 
+    * @return String    返回类型 
+    * @throws
+     */
+    public static String getYear(String str){
+    	Date date;
+		try {
+			date = DateUtils.parseDate(str, "yyyy-MM-dd");
+			return DateFormatUtils.format(date, "yyyy");
+		} catch (ParseException e) {
+			logger.error("Date Parse Exception:"+e);
+			e.printStackTrace();
+			return null;
+		}
+    }
+    
+    /**
+     * 
+    * @Title: getMonth 
+    * @Description: 获取月份 
+    * @param @param date
+    * @param @return    设定文件 
+    * @return String    返回类型 
+    * @throws
+     */
+    public static String getMonth(String str){
+    	Date date;
+		try {
+			date = DateUtils.parseDate(str, "yyyy-MM-dd");
+			return DateFormatUtils.format(date, "MM");
+		} catch (ParseException e) {
+			logger.error("Date Parse Exception:"+e);
+			e.printStackTrace();
+			return null;
+		}
+    }
+    /**
+     * 
+    * @Title: getDay 
+    * @Description: 获取日 
+    * @param @param date
+    * @param @return    设定文件 
+    * @return String    返回类型 
+    * @throws
+     */
+    public static String getDay(String str){
+    	Date date;
+		try {
+			date = DateUtils.parseDate(str, "yyyy-MM-dd");
+			return DateFormatUtils.format(date, "dd");
+		} catch (ParseException e) {
+			logger.error("Date Parse Exception:"+e);
+			e.printStackTrace();
+			return null;
+		}
+    }
+    
+    
 }

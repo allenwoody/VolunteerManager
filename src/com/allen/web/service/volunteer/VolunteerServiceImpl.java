@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.allen.core.feature.orm.mybatis.Page;
@@ -13,6 +14,7 @@ import com.allen.web.dao.VolunteerMapper;
 import com.allen.web.enums.EnumBool;
 import com.allen.web.model.Volunteer;
 import com.allen.web.model.VolunteerExample;
+import com.allen.web.model.VolunteerExample.Criteria;
 /**
  * 
 * @ClassName: VolunteerServiceImpl 
@@ -36,6 +38,7 @@ public class VolunteerServiceImpl extends GenericServiceImpl<Volunteer, String> 
 	public List<Volunteer> selectList(Page<Volunteer> page) {
 		VolunteerExample example = new VolunteerExample();
 		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
+		example.setOrderByClause("volunteer_name");
 		return this.volunteerMapper.selectByExample(example, page);
 	}
 
@@ -45,6 +48,36 @@ public class VolunteerServiceImpl extends GenericServiceImpl<Volunteer, String> 
 		record.setVolunteerId(id);
 		record .setIsValid(EnumBool.NO.getCode());
 		return this.volunteerMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public List<Volunteer> selectBySearchingPage(Volunteer volunteer, Page<Volunteer> page) {
+		VolunteerExample example = new VolunteerExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIsValidEqualTo(EnumBool.YES.getCode());
+		if(StringUtils.isNotBlank(volunteer.getVolunteerName())){
+			criteria.andVolunteerNameLike("%"+volunteer.getVolunteerName()+"%");
+		}
+		if (StringUtils.isNotBlank(volunteer.getMobile())) {
+			criteria.andMobileLike("%"+volunteer.getMobile()+"%");
+		}
+		example.setOrderByClause("volunteer_name");
+		return this.volunteerMapper.selectByExample(example, page);
+	}
+	
+	@Override
+	public List<Volunteer> selectBySearching(Volunteer volunteer) {
+		VolunteerExample example = new VolunteerExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIsValidEqualTo(EnumBool.YES.getCode());
+		if(StringUtils.isNotBlank(volunteer.getVolunteerName())){
+			criteria.andVolunteerNameLike("%"+volunteer.getVolunteerName()+"%");
+		}
+		if (StringUtils.isNotBlank(volunteer.getMobile())) {
+			criteria.andMobileLike("%"+volunteer.getMobile()+"%");
+		}
+		example.setOrderByClause("volunteer_name");
+		return this.volunteerMapper.selectByExample(example);
 	}
 
 }

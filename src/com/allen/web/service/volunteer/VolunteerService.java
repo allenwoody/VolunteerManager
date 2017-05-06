@@ -1,5 +1,8 @@
 package com.allen.web.service.volunteer;
 
+import java.util.List;
+
+import com.allen.core.feature.orm.mybatis.Page;
 import com.allen.core.generic.GenericService;
 import com.allen.web.model.Volunteer;
 
@@ -13,4 +16,25 @@ import com.allen.web.model.Volunteer;
  */
 public interface VolunteerService extends GenericService<Volunteer, String>{
 
+	/**
+	 * 
+	* @Title: selectBySearchingPage 
+	* @Description: 按条件分页查询志愿者信息 
+	* @param @param volunteer
+	* @param @param page
+	* @param @return    设定文件 
+	* @return List<Volunteer>    返回类型 
+	* @throws
+	 */
+	List<Volunteer> selectBySearchingPage(Volunteer volunteer, Page<Volunteer> page);
+	/**
+	 * 
+	* @Title: selectBySearchingPage 
+	* @Description: 按条件查询志愿者信息 
+	* @param @param volunteer
+	* @param @return    设定文件 
+	* @return List<Volunteer>    返回类型 
+	* @throws
+	 */
+	List<Volunteer> selectBySearching(Volunteer volunteer);
 }

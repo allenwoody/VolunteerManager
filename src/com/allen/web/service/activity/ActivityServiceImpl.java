@@ -36,6 +36,7 @@ public class ActivityServiceImpl extends GenericServiceImpl<Activity, String> im
 	public List<Activity> selectList(Page<Activity> page) {
 		ActivityExample example = new ActivityExample();
 		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
+		example.setOrderByClause("activity_date");
 		return this.activityMapper.selectByExample(example, page);
 	}
 
@@ -44,7 +45,15 @@ public class ActivityServiceImpl extends GenericServiceImpl<Activity, String> im
 		Activity record = new Activity();
 		record.setActivityId(id);
 		record.setIsValid(EnumBool.NO.getCode());
-		return this.activityMapper.updateByPrimaryKey(record);
+		return this.activityMapper.updateByPrimaryKeySelective(record);
+	}
+	
+	@Override
+	public List<Activity> selectList() {
+		ActivityExample example = new ActivityExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode());
+		example.setOrderByClause("activity_date desc");
+		return this.activityMapper.selectByExample(example);
 	}
 	
 }

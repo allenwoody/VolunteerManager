@@ -1,8 +1,6 @@
 package com.allen.web.model;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class ActivityExample {
@@ -104,32 +102,6 @@ public class ActivityExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
-        }
-
-        protected void addCriterionForJDBCDate(String condition, Date value, String property) {
-            if (value == null) {
-                throw new RuntimeException("Value for " + property + " cannot be null");
-            }
-            addCriterion(condition, new java.sql.Date(value.getTime()), property);
-        }
-
-        protected void addCriterionForJDBCDate(String condition, List<Date> values, String property) {
-            if (values == null || values.size() == 0) {
-                throw new RuntimeException("Value list for " + property + " cannot be null or empty");
-            }
-            List<java.sql.Date> dateList = new ArrayList<java.sql.Date>();
-            Iterator<Date> iter = values.iterator();
-            while (iter.hasNext()) {
-                dateList.add(new java.sql.Date(iter.next().getTime()));
-            }
-            addCriterion(condition, dateList, property);
-        }
-
-        protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property) {
-            if (value1 == null || value2 == null) {
-                throw new RuntimeException("Between values for " + property + " cannot be null");
-            }
-            addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
         }
 
         public Criteria andActivityIdIsNull() {
@@ -282,53 +254,63 @@ public class ActivityExample {
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateEqualTo(Date value) {
-            addCriterionForJDBCDate("activity_date =", value, "activityDate");
+        public Criteria andActivityDateEqualTo(String value) {
+            addCriterion("activity_date =", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateNotEqualTo(Date value) {
-            addCriterionForJDBCDate("activity_date <>", value, "activityDate");
+        public Criteria andActivityDateNotEqualTo(String value) {
+            addCriterion("activity_date <>", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateGreaterThan(Date value) {
-            addCriterionForJDBCDate("activity_date >", value, "activityDate");
+        public Criteria andActivityDateGreaterThan(String value) {
+            addCriterion("activity_date >", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("activity_date >=", value, "activityDate");
+        public Criteria andActivityDateGreaterThanOrEqualTo(String value) {
+            addCriterion("activity_date >=", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateLessThan(Date value) {
-            addCriterionForJDBCDate("activity_date <", value, "activityDate");
+        public Criteria andActivityDateLessThan(String value) {
+            addCriterion("activity_date <", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("activity_date <=", value, "activityDate");
+        public Criteria andActivityDateLessThanOrEqualTo(String value) {
+            addCriterion("activity_date <=", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateIn(List<Date> values) {
-            addCriterionForJDBCDate("activity_date in", values, "activityDate");
+        public Criteria andActivityDateLike(String value) {
+            addCriterion("activity_date like", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateNotIn(List<Date> values) {
-            addCriterionForJDBCDate("activity_date not in", values, "activityDate");
+        public Criteria andActivityDateNotLike(String value) {
+            addCriterion("activity_date not like", value, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("activity_date between", value1, value2, "activityDate");
+        public Criteria andActivityDateIn(List<String> values) {
+            addCriterion("activity_date in", values, "activityDate");
             return (Criteria) this;
         }
 
-        public Criteria andActivityDateNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("activity_date not between", value1, value2, "activityDate");
+        public Criteria andActivityDateNotIn(List<String> values) {
+            addCriterion("activity_date not in", values, "activityDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivityDateBetween(String value1, String value2) {
+            addCriterion("activity_date between", value1, value2, "activityDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivityDateNotBetween(String value1, String value2) {
+            addCriterion("activity_date not between", value1, value2, "activityDate");
             return (Criteria) this;
         }
 

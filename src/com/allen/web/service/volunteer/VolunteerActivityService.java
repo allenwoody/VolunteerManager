@@ -1,5 +1,7 @@
 package com.allen.web.service.volunteer;
 
+import java.util.List;
+
 import com.allen.core.generic.GenericService;
 import com.allen.web.model.VolunteerActivity;
 /**
@@ -11,5 +13,18 @@ import com.allen.web.model.VolunteerActivity;
 *
  */
 public interface VolunteerActivityService extends GenericService<VolunteerActivity, String>{
+	
+	int insertActivityVolenteers(String activityId, String[] volunteerIds);
+
+	/**
+	 * 
+	* @Title: selectListByActivityId 
+	* @Description: 按活动ID查询
+	* @param @param activityId
+	* @param @return    设定文件 
+	* @return List<VolunteerActivity>    返回类型 
+	* @throws
+	 */
+	List<VolunteerActivity> selectListByActivityId(String activityId);
 
 }

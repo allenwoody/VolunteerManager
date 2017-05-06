@@ -1,7 +1,5 @@
 package com.allen.web.model;
 
-import java.util.Date;
-
 public class Volunteer {
     private String volunteerId;
 
@@ -9,7 +7,7 @@ public class Volunteer {
 
     private String sex;
 
-    private Date birthday;
+    private String birthday;
 
     private String mobile;
 
@@ -43,12 +41,12 @@ public class Volunteer {
         this.sex = sex == null ? null : sex.trim();
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday == null ? null : birthday.trim();
     }
 
     public String getMobile() {

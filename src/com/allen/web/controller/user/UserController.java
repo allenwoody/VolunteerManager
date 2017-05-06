@@ -42,7 +42,7 @@ import com.allen.web.service.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 @Controller
 public class UserController extends GenericController {
 
@@ -119,7 +119,7 @@ public class UserController extends GenericController {
 		if (i == 1) {
 //			map.put("oprationCode", EnumOpration.INSERT_SUCCESS.getCode());
 		}
-		return "redirect:/user/listUser.html";
+		return "redirect:/admin/user/listUser.html";
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class UserController extends GenericController {
 		}else {
 //			map.put("oprationCode", EnumOpration.FAILED.getCode());
 		}
-		return "redirect:/user/listUser.html";
+		return "redirect:/admin/user/listUser.html";
 	}
 
 	/**
@@ -226,13 +226,13 @@ public class UserController extends GenericController {
 	public String deleteUser(@RequestParam(value = "userId", required = false) String userId, ModelMap map) {
 //		if (userId.equals(getLoginUser().getUserId())) {
 ////			map.put("oprationCode", EnumOpration.CANNOT_DELETE_YOURSELF.getCode());
-//			return "redirect:/user/listUser.htm";
+//			return "redirect:/admin/user/listUser.htm";
 //		}
 		int i = this.userService.delete(userId);
 		if (i == 1) {
 //			map.put("oprationCode", EnumOpration.DELETE_SUCCESS.getCode());
 		}
-		return "redirect:/user/listUser.html";
+		return "redirect:/admin/user/listUser.html";
 	}
 
 //	/**

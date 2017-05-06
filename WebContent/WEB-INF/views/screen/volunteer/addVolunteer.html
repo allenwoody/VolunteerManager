@@ -7,7 +7,7 @@
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">志愿者信息</strong> / <small>新增</small></div>
   </div>
   	<div class="am-container">
-        <form id="frmMain" class="am-form" action="${rc.contextPath}/volunteer/insertVolunteer.html" method="post" data-am-validator>
+        <form id="frmMain" class="am-form" action="${rc.contextPath}/admin/volunteer/insertVolunteer.html" method="post" data-am-validator>
           <div class="am-g am-margin-top">
             <div class="am-u-sm-4 am-u-md-2 am-text-right">
               姓名
@@ -82,11 +82,57 @@
 
 <script type="text/javascript">
 $(function(){
+	var birthday = $("#birthday");
+	/* 生日禁止选择大于当前日期 */
+	var nowTemp = new Date();
+    var nowDay = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0).valueOf();
+    var nowMoth = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), 1, 0, 0, 0, 0).valueOf();
+    var nowYear = new Date(nowTemp.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf();
+	var checkin = birthday.datepicker({
+	  viewMode: "years", 
+      onRender: function(date, viewMode) {
+        // 默认 days 视图，与当前日期比较
+        var viewDate = nowDay;
+
+        switch (viewMode) {
+          // moths 视图，与当前月份比较
+          case 1:
+            viewDate = nowMoth;
+            break;
+          // years 视图，与当前年份比较
+          case 2:
+            viewDate > nowYear;
+            break;
+        }
+
+        return date.valueOf() > viewDate ? 'am-disabled' : '';
+      }
+    }).on('changeDate.datepicker.amui', function(ev) {
+    	var dependedVal = $(this).val();
+    	if(!dependedVal){
+    		return;
+    	}
+		//根据日期字符串转换成日期 
+		var regEx = new RegExp("\\-","gi"); 
+		dependedVal=dependedVal.replace(regEx,"/"); 
+		var nowDate = new Date();
+		var birthday = new Date(dependedVal);
+		var age = nowDate.getFullYear()-birthday.getFullYear();
+		if(nowDate.getMonth()<birthday.getMonth()){
+			age = age-1;
+		}else if(nowDate.getMonth()==birthday.getMonth()){
+			if(nowDate.getDate()<birthday.getDate()){
+				age = age-1;
+			}
+		}
+		$("#age").text(age+"岁");
+    })
+	
 	$("#submitBtn").click(function(){
 		$("#frmMain").submit();
 	});
 	$("#cancelBtn").click(function(){
-		window.location.href='${rc.contextPath}/volunteer/listVolunteer.html';
+		window.location.href='${rc.contextPath}/admin/volunteer/listVolunteer.html';
 	});
 	
 });

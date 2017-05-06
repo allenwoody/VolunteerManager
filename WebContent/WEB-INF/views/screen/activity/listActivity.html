@@ -8,7 +8,7 @@
     </div>
 
     <div class="am-g">
-    <form id="searchForm" action="${rc.contextPath}/activity/listActivity.html">
+    <form id="searchForm" action="${rc.contextPath}/admin/activity/listActivity.html">
      <input type="hidden" id="pageNo" name="pageNo"/>
       <div class="am-u-sm-12 am-u-md-6">
         <div class="am-btn-toolbar">
@@ -52,9 +52,9 @@
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
-                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location='${rc.contextPath}/activity/editActivity.html?activityId=$!{activity.activityId}'"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-warning" onclick="javascript:assignPermissions('$!{activity.activityId}')"><span class="am-icon-pencil-square-o"></span> 分配权限</button>
-                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="location='${rc.contextPath}/activity/deleteActivity.html?activityId=$!{activity.activityId}'"><span class="am-icon-trash-o"></span> 删除</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="location='${rc.contextPath}/admin/activity/editActivity.html?activityId=$!{activity.activityId}'"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-warning" onclick="javascript:assignVolunteer('$!{activity.activityId}')"><span class="am-icon-pencil-square-o"></span> 分配志愿者</button>
+                    <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="location='${rc.contextPath}/admin/activity/deleteActivity.html?activityId=$!{activity.activityId}'"><span class="am-icon-trash-o"></span> 删除</button>
                   </div>
                 </div>
               </td>
@@ -63,23 +63,23 @@
           </tbody>
         </table>
           <div class="am-cf">
-  共 ${page.totalCount} 条记录
-  <div class="am-fr">
-    <ul class="am-pagination">
-      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:query(1)">«</a></li>
-      #if(${page.totalPages}>0)
-      #foreach($foo in [1..${page.totalPages}])
-      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:query($foo)">$foo</a></li>
-      #end
-      #else
-      <li class="am-active"><a href="javascript:query(1)">1</a></li>
-      #end
-      
-      <li #if(${page.pageNo}==${page.totalPages}) class="am-disabled" #end><a href="javascript:query(${page.totalPages})">»</a></li>
-    </ul>
-  </div>
-</div>
-          <hr />
+			  共 ${page.totalCount} 条记录
+			  <div class="am-fr">
+			    <ul class="am-pagination">
+			      <li #if(${page.pageNo}=='1') class="am-disabled" #end><a href="javascript:query(1)">«</a></li>
+			      #if(${page.totalPages}>0)
+			      #foreach($foo in [1..${page.totalPages}])
+			      <li #if($foo==$page.pageNo) class="am-active" #end><a href="javascript:query($foo)">$foo</a></li>
+			      #end
+			      #else
+			      <li class="am-active"><a href="javascript:query(1)">1</a></li>
+			      #end
+			      
+			      <li #if(${page.pageNo}==${page.totalPages}) class="am-disabled" #end><a href="javascript:query(${page.totalPages})">»</a></li>
+			    </ul>
+			  </div>
+			</div>
+          <hr/>
           <p>注：.....</p>
         </form>
       </div>
@@ -87,150 +87,207 @@
     </div>
   </div>
  </div>
- 
- <div class="am-modal am-modal-confirm" tabindex="-1" id="assign-modal">
-  <form id="assignActivitysForm" action="${rc.contextPath}/activity/savePermissionAssignment.json" method="post">
-  <div class="am-modal-dialog">
-    <div class="am-modal-hd">分配权限</div>
-    <div class="am-modal-bd">
-    
-	<!-- MultiSelect start -->      
-	<div class="row">
-		<div class="col-xs-5">
-			<select name="from" id="multiselect" class="form-control" size="8" multiple="multiple"></select>
-		</div>
-		
-		<div class="col-xs-2">
-			<button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
-			<button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
-			<button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
-			<button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
-		</div>
-		
-		<div class="col-xs-5">
-			<select name="to" id="multiselect_to" class="form-control" size="8" multiple="multiple"></select>
-		</div>
-	</div>
-	<!-- MultiSelect end -->      
 
+<!-- volunteer modal -->
+<div class="am-modal am-modal-confirm am-margin" tabindex="-1" id="volunteer-modal">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">选择志愿者</div>
+    <div class="am-modal-bd">
+      	<form action="" id="assignVolunteerForm" class="am-form-inline">
+      		<input type="hidden" name="pageNo" id="pageNo"/>
+      		<div class="am-form-group">
+			    <input type="text" name="nameSearch" id="nameSearch" class="am-form-field" placeholder="姓名">
+			 </div>
+			 <div class="am-form-group">
+			    <input type="text" name="mobileSearch" id="mobileSearch" class="am-form-field" placeholder="手机号">
+			 </div>
+			  <button type="button" id="volunteerInfoSearchBtn" class="am-btn am-btn-default">查询</button>
+      		<div class="am-g am-margin-top">
+          <div id="boxes" class="am-scrollable-vertical">
+
+   		  </div> 		
+          </div>
+      	</form>
     </div>
     <div class="am-modal-footer">
       <span class="am-modal-btn" data-am-modal-confirm>确定</span>
       <span class="am-modal-btn" data-am-modal-cancel>取消</span>
     </div>
   </div>
-  </form>
 </div>
+
  #admin_sidebar_sm
  #admin_footer
-<script src="${rc.contextPath}/assets/js/bootstrap.min.js"></script>
-<script src="${rc.contextPath}/assets/js/multiselect.min.js"></script>
 <script type="text/javascript">
 $(function(){
-	$('#multiselect').multiselect({
-		keepRenderingSort: true,
-		right: '#multiselect_right',
-		rightAll: '#multiselect_r	ightAll',
-		rightSelected: '#multiselect_rightSelected',
-		leftSelected: '#multiselect_leftSelected',
-		leftAll: '#multiselect_leftAll',
-		search: {
-			left: '<input type="text" name="q" class="form-control" placeholder="未分配的权限" />',
-			right: '<input type="text" name="q" class="form-control" placeholder="已分配的权限" />',
-		}
-	});
 	
 	$("#addBtn").click(function(){
-		window.location.href='${rc.contextPath}/activity/addActivity.html';
+		window.location.href='${rc.contextPath}/admin/activity/addActivity.html';
 	});
 	$("#searchBtn").click(function(){		
+		query1();
+	});
+	$("#volunteerInfoSearchBtn").click(function(){
 		query();
 	});
 });
 
 //分配权限
-var _activityId="";
-function assignPermissions(activityId){
-	_activityId=activityId;
-	if(!activityId){
-		return;
-	}
-	$.ajax({
-		type : 'post',
-        url : '${rc.contextPath}/activity/getAvailablePermissions.json',
-		data : 'activityId='+activityId,
-        dataType : 'json',  
-        async : false,
-        success : function(data){
-        	for(var i=0;i<data.length;i++){
-        		$("#multiselect").append("<option value='"+data[i].permissionId+"'>"+data[i].permissionName+"</option>");
-        	}
-        },  
-        error : function(data,textstatus){
-			
-        }  
-    });
-	$.ajax({
-		type : 'post',
-        url : '${rc.contextPath}/activity/getExistingPermissions.json',
-		data : 'activityId='+activityId,
-        dataType : 'json',
-        async : false,
-        success : function(data){
-        	for(var i=0;i<data.length;i++){
-        		$("#multiselect_to").append("<option value='"+data[i].permissionId+"'>"+data[i].permissionName+"</option>");
-        	}
-        },  
-        error : function(data,textstatus){
-			
-        }  
-    });
-	$('#assign-modal').modal({
+// var _activityId="";
+/**
+ * 分配志愿者
+ */
+function assignVolunteer(activityId){
+	$("#boxes").empty();
+	loadVolunteer(activityId);
+	$('#volunteer-modal').modal({
         relatedTarget: this,
         onConfirm: function(options) {
-        	$.AMUI.progress.start();
-        	//表单异步提交
-        	var param = "activityId="+_activityId;
-        	$("#multiselect_to option").each(function(){
-        		param = param +"&permissionIds="+$(this).val();
-        	});
+        	var userId = $("input[type='checkbox']:checked").val();
+        	var _volunteer_ids = $("input[name='volunteerId'][type='checkbox']:checked")
+        	var volunteerIds = new Array();
+        	for (var i = 0; i < _volunteer_ids.length; i++) {
+        		volunteerIds[i] = (_volunteer_ids[i].value); // 将文本框的值添加到数组中
+    		}
+        	var param = {'activityId':activityId,'volunteerIds':volunteerIds};
         	$.ajax({
-    			type : 'post',
-                url : '${rc.contextPath}/activity/savePermissionAssignment.json',
-    			data : param,
+        		type : 'post',
+                url : '${rc.contextPath}/admin/activity/ajax/insertActivityVolunteer.json',
+        		data : param,
                 dataType : 'json',  
                 success : function(data){
-    				if("true"== data.success){
-	    				$.AMUI.progress.done();
-    				}else{
-    					alert("分配权限失败！");
-    				}
+        			if(data.success){
+        				alert("success!");
+        			}else{
+        				alert("获取志愿者信息失败！");
+        			}
                 },  
                 error : function(data,textstatus){
-    				alert("分配权限失败！");
+        			alert("获取志愿者信息失败！");
                 }  
             });
-        	clearSelectors();
         },
+      //  closeViaDimmer: false,
         // closeOnConfirm: false,
         onCancel: function() {
-        	clearSelectors();
+        	$("#nameSearch").val(""); 
+        	$("#mobileSearch").val(""); 
+        	$("#pageNo").val(""); 
         }
       });
 }
 
-//清空选择器
-function clearSelectors(){
-	$("#multiselect option").remove();
-	$("#multiselect_to option").remove();
-}
 
-
-function query(pageNo){
+function query1(pageNo){
 	if(pageNo){
 		$("#pageNo").val(pageNo);
 	}
 	$("#searchForm").submit();
 	
+}
+
+/**
+ * 遮罩层条件查询，分页查询
+ */
+function query(pageNo){
+	if(pageNo){
+		$("#pageNo").val(pageNo);
+	}
+	$("#boxes").empty();
+	loadVolunteer();
+}
+/**
+ * 获取客户信息
+ */
+function loadVolunteer(activityId){
+	var nameSearch = $("#nameSearch").val();
+	var mobileSearch = $("#mobileSearch").val();
+	var pageNo = $("#pageNo").val();
+	var param = {'nameSearch':nameSearch,'mobileSearch':mobileSearch,'pageNo':pageNo,'activityId':activityId};
+	$.ajax({
+		type : 'post',
+        url : '${rc.contextPath}/admin/volunteer/ajax/getVolunteers.json',
+		data : param,
+        dataType : 'json',  
+        success : function(data){
+			if(data.success){
+				if(data.data.length>0){
+						createUserInfoBoxes(data.data);
+				}else{
+					createUserInfoBoxes(null);
+				}
+			}else{
+				alert("获取人员信息失败！");
+			}
+        },  
+        error : function(data,textstatus){
+			alert("获取人员信息失败！");
+        }  
+    });
+}
+
+//创建用户信息html
+function createUserInfoBoxes(volunteerInfo){
+	var userInfoHtml = '<table class="am-table am-table-bordered am-table-centered">'
+    +'<thead>'
+    +'<tr>'
+    +'<th>&nbsp;</th>'
+    +'  <th>姓名</th>'
+    +'  <th>性别</th>'
+    +'  <th>手机</th>'
+    +'</tr>'
+    +'</thead>'
+    +'<tbody>';
+    var data = volunteerInfo[0];
+    var page = volunteerInfo[1];
+     if(data){
+		for(var i=0;i<data.length;i++){
+			
+			userInfoHtml = userInfoHtml+'<tr>'
+			if(data[i].checked){
+				userInfoHtml = userInfoHtml+'<td><input type="checkbox" checked="checked" name="volunteerId" value="'+data[i].volunteerId+'"/></td>'
+			}else{
+				userInfoHtml = userInfoHtml+'<td><input type="checkbox" name="volunteerId" value="'+data[i].volunteerId+'"/></td>'
+			}
+			userInfoHtml = userInfoHtml+'<td>'+data[i].volunteerName+'</td>'
+			+'<td>'+data[i].sex+'</td>'
+			+'<td>'+data[i].mobile+'</td>'
+			+'</tr>'
+			
+		}
+		
+		userInfoHtml = userInfoHtml+'</tbody>'
+		+'</table>'
+		+'<div class="am-cf">'
+		+'共'+page.totalCount+'条记录'
+		+'<div class="am-fr">'
+		+'<ul class="am-pagination">'
+		+'<li' 
+		if(page.pageNo=='1'){
+			userInfoHtml = userInfoHtml+' class="am-disabled"'
+		}
+		userInfoHtml = userInfoHtml+'><a href="javascript:query(1)">«</a></li>'
+		if(page.totalPages>0){
+			for(var i=1;i<=page.totalPages;i++){
+				userInfoHtml = userInfoHtml+'<li'
+				if(i==page.pageNo){
+					userInfoHtml = userInfoHtml+' class="am-active"'
+				+'><a href="javascript:query('+i+')">'+i+'</a></li>'
+				}
+			}
+		}else{
+			userInfoHtml = userInfoHtml+'<li class="am-active"><a href="javascript:query(1)">1</a></li>'
+		}
+		userInfoHtml = userInfoHtml+'<li'
+		if(page.pageNo==page.totalPages){
+			userInfoHtml = userInfoHtml+' class="am-disabled"'
+		}
+		userInfoHtml = userInfoHtml+'><a href="javascript:query('+page.totalPages+')">»</a></li>'
+		+'   </ul>'
+		+' </div>'
+		+'</div>'
+    } 
+	
+	$(userInfoHtml).appendTo("#boxes");
 }
 </script>

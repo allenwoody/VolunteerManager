@@ -12,7 +12,7 @@
       <li><a href="javascript:;"><span class="am-icon-users"></span>${session.getAttribute("currentUser")}</a></li>
     </ul>
     <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-     <li><a href="${rc.contextPath}/user/modifyPassword.html"><span class="am-icon-cog"></span> 修改密码</a></li>
+     <li><a href="${rc.contextPath}/admin/user/modifyPassword.html"><span class="am-icon-cog"></span> 修改密码</a></li>
     </ul>
       #*
     <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
@@ -46,19 +46,20 @@
   <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
     <div class="am-offcanvas-bar admin-offcanvas-bar">
       <ul class="am-list admin-sidebar-list">
-        <li><a href="${rc.contextPath}/index.html"><span class="am-icon-home"></span> 首页</a></li>
-        <li><a href="${rc.contextPath}/volunteer/listVolunteer.html"><span class=""></span> 志愿者信息</a></li>
+        <li><a href="${rc.contextPath}/admin/index.html"><span class="am-icon-home"></span> 首页</a></li>
+        <li><a href="${rc.contextPath}/admin/volunteer/listVolunteer.html"><span class=""></span> 志愿者信息</a></li>
+        <li><a href="${rc.contextPath}/admin/activity/listActivity.html"><span class=""></span> 活动信息</a></li>
         <li class="admin-parent">
           <a class="am-cf am-collapsed" data-am-collapse="{target: '#collapse-nav-permisison'}"><span class="am-icon-file"></span> 权限管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
           <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav-permisison">
-            <li><a href="${rc.contextPath}/user/listUser.html" class="am-cf"><span class=""></span> 用户管理</a></li>
-            <li><a href="${rc.contextPath}/role/listRole.html"><span class="am-icon-puzzle-piece"></span> 角色管理</a></li>
+            <li><a href="${rc.contextPath}/admin/user/listUser.html" class="am-cf"><span class=""></span> 用户管理</a></li>
+            <li><a href="${rc.contextPath}/admin/role/listRole.html"><span class="am-icon-puzzle-piece"></span> 角色管理</a></li>
             ##if($shiro.hasPermission('permission:query'))
-            <li><a href="${rc.contextPath}/permission/listPermission.html"><span class="am-icon-th"></span> 权限管理</a></li>
+            <li><a href="${rc.contextPath}/admin/permission/listPermission.html"><span class="am-icon-th"></span> 权限管理</a></li>
             ##end
           </ul>
         </li>
-        <li><a href="${rc.contextPath}/user/logout.html"><span class="am-icon-sign-out"></span> 注销</a></li>
+        <li><a href="${rc.contextPath}/admin/user/logout.html"><span class="am-icon-sign-out"></span> 注销</a></li>
       </ul>
 
       <div class="am-panel am-panel-default admin-sidebar-panel">

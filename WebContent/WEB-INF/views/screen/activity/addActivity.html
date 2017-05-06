@@ -7,7 +7,7 @@
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">活动信息</strong> / <small>新增</small></div>
   </div>
   	<div class="am-container">
-        <form id="frmMain" method="post" class="am-form" action="${rc.contextPath}/customer/insertCustomer.html" data-am-validator>
+        <form id="frmMain" method="post" class="am-form" action="${rc.contextPath}/admin/activity/insertActivity.html" data-am-validator>
           <div class="am-g am-margin-top">
             <div class="am-u-sm-4 am-u-md-2 am-text-right">
               活动名称
@@ -17,13 +17,12 @@
             </div>
           </div>
           
-          <div class="am-g am-margin-top">
+           <div class="am-g am-margin-top">
             <div class="am-u-sm-4 am-u-md-2 am-text-right">
              活动日期
             </div>
-            <div class="am-u-sm-4 am-u-md-2">
-              <input id="activityDate" type="text" class="am-form-field" name="activityDate" placeholder="生日"  readonly/>
-            </div>
+            <div class="am-u-sm-4 am-u-md-2 am-u-end">
+              <input id="activityDate" type="text" class="am-form-field" name="activityDate" placeholder="活动日期"  readonly/>
             </div>
           </div>
           
@@ -32,7 +31,7 @@
               活动地址
             </div>
             <div class="am-u-sm-8 am-u-md-4 am-u-end">
-              <input type="text" name="activityName" class="am-input-sm js-pattern-name"  maxlength="25" required>
+              <input type="text" name="activityAddress" class="am-input-sm js-pattern-name"  maxlength="25" required>
             </div>
           </div>
 
@@ -40,9 +39,8 @@
             <div class="am-u-sm-4 am-u-md-2 am-text-right">
               参与的志愿者
             </div>
-            <div class="am-u-sm-8 am-u-md-4 am-u-end" name="fellowId">
-            	<input type="hidden" name="fellowId" id="fellowId" >
-              <button type="button" id="fellowName" onclick="javascript:assignVolunteer()" class="am-btn am-btn-default">点击选择</button>
+            <div class="am-u-sm-8 am-u-md-4 am-u-end">
+              <button type="button" id="assignVolunteers" onclick="javascript:assignVolunteer()" class="am-btn am-btn-default">点击选择</button>
             </div>
           </div>
             
@@ -59,19 +57,19 @@
 
 
 
-<div class="am-modal am-modal-confirm am-margin" tabindex="-1" id="company-confirm">
+<div class="am-modal am-modal-confirm am-margin" tabindex="-1" id="volunteer-modal">
   <div class="am-modal-dialog">
-    <div class="am-modal-hd">选择关联人</div>
-    <div class="am-modal-bd" id="companyActivity">
+    <div class="am-modal-hd">选择志愿者</div>
+    <div class="am-modal-bd">
       	<form action="" id="assignUserForm" class="am-form-inline">
       		<input type="hidden" name="pageNo" id="pageNo"/>
       		<div class="am-form-group">
 			    <input type="text" name="nameSearch" id="nameSearch" class="am-form-field" placeholder="姓名">
 			 </div>
 			 <div class="am-form-group">
-			    <input type="text" name="phoneSearch" id="phoneSearch" class="am-form-field" placeholder="手机号">
+			    <input type="text" name="mobileSearch" id="mobileSearch" class="am-form-field" placeholder="手机号">
 			 </div>
-			  <button type="button" id="userInfoSearchBtn" class="am-btn am-btn-default">查询</button>
+			  <button type="button" id="volunteerInfoSearchBtn" class="am-btn am-btn-default">查询</button>
       		<div class="am-g am-margin-top">
           <div id="boxes" class="am-scrollable-vertical">
 
@@ -154,11 +152,11 @@ $(function(){
 		$("#isTs").val(0);
 		$("#frmMain").submit();
 	});
-	$("#userInfoSearchBtn").click(function(){
+	$("#volunteerInfoSearchBtn").click(function(){
 		query();
 	});
 	$("#cancelBtn").click(function(){
-		window.location.href='${rc.contextPath}/customer/listCustomer.html';
+		window.location.href='${rc.contextPath}/admin/activity/listActivity.html';
 	});
 	
 	
@@ -199,26 +197,25 @@ function conveterParamsToJson(paramsAndValues) {
 }  
 
 /**
- * 分配同行人
+ * 分配志愿者
  */
 function assignVolunteer(){
 	$("#boxes").empty();
-	loadUser();
-	$('#company-confirm').modal({
+	loadVolunteer();
+	$('#volunteer-modal').modal({
         relatedTarget: this,
         onConfirm: function(options) {
-        	var userId = $("input[type='radio']:checked").val();
-        	$("#fellowId").val(userId);
+        	var userId = $("input[type='checkbox']:checked").val();
         	var param = {'userId':userId};
         	$.ajax({
         		type : 'post',
-                url : '${rc.contextPath}/customer/ajax/getUserInfoById.json',
+                url : '${rc.contextPath}/admin/volunteer/ajax/getVolunteers.json',
         		data : param,
                 dataType : 'json',  
                 success : function(data){
         			if(data.success){
         				var name = data.data.name;
-        				$("#fellowName").html(name);
+        				$("#assignVolunteer").html(name);
         			}else{
         				alert("获取志愿者信息失败！");
         			}
@@ -232,7 +229,7 @@ function assignVolunteer(){
         // closeOnConfirm: false,
         onCancel: function() {
         	$("#nameSearch").val(""); 
-        	$("#phoneSearch").val(""); 
+        	$("#mobileSearch").val(""); 
         	$("#pageNo").val(""); 
         }
       });
@@ -246,20 +243,20 @@ function query(pageNo){
 		$("#pageNo").val(pageNo);
 	}
 	$("#boxes").empty();
-	loadUser();
+	loadVolunteer();
 }
 
 /**
  * 获取客户信息
  */
-function loadUser(){
+function loadVolunteer(){
 	var nameSearch = $("#nameSearch").val();
-	var phoneSearch = $("#phoneSearch").val();
+	var mobileSearch = $("#mobileSearch").val();
 	var pageNo = $("#pageNo").val();
-	var param = {'nameSearch':nameSearch,'phoneSearch':phoneSearch,'pageNo':pageNo};
+	var param = {'nameSearch':nameSearch,'mobileSearch':mobileSearch,'pageNo':pageNo};
 	$.ajax({
 		type : 'post',
-        url : '${rc.contextPath}/customer/ajax/getUserInfo.json',
+        url : '${rc.contextPath}/admin/volunteer/ajax/getVolunteers.json',
 		data : param,
         dataType : 'json',  
         success : function(data){
@@ -280,7 +277,7 @@ function loadUser(){
 }
 
 //创建用户信息html
-function createUserInfoBoxes(userInfos){
+function createUserInfoBoxes(volunteerInfo){
 	var userInfoHtml = '<table class="am-table am-table-bordered am-table-centered">'
     +'<thead>'
     +'<tr>'
@@ -288,19 +285,17 @@ function createUserInfoBoxes(userInfos){
     +'  <th>姓名</th>'
     +'  <th>性别</th>'
     +'  <th>手机</th>'
-    +'  <th>邮箱</th>'
     +'</tr>'
     +'</thead>'
     +'<tbody>'
-     if(userInfos){
-		for(var i=1;i<userInfos.length;i++){
+     if(volunteerInfo){
+		for(var i=1;i<volunteerInfo.length;i++){
 			
 			userInfoHtml = userInfoHtml+'<tr>'
-			+'<td><input type="radio" name="userId" value="'+userInfos[i].customerId+'"/></td>'
-			+'<td>'+userInfos[i].name+'</td>'
-			+'<td>'+userInfos[i].sex+'</td>'
-			+'<td>'+userInfos[i].mobile+'</td>'
-			+'<td>'+userInfos[i].email+'</td>'
+			+'<td><input type="radio" name="volunteerId" value="'+volunteerInfo[i].volunteerId+'"/></td>'
+			+'<td>'+volunteerInfo[i].volunteerName+'</td>'
+			+'<td>'+volunteerInfo[i].sex+'</td>'
+			+'<td>'+volunteerInfo[i].mobile+'</td>'
 			+'</tr>'
 			
 		}
@@ -308,18 +303,18 @@ function createUserInfoBoxes(userInfos){
 		userInfoHtml = userInfoHtml+'</tbody>'
 		+'</table>'
 		+'<div class="am-cf">'
-		+'共'+userInfos[0].totalCount+'条记录'
+		+'共'+volunteerInfo[0].totalCount+'条记录'
 		+'<div class="am-fr">'
 		+'<ul class="am-pagination">'
 		+'<li' 
-		if(userInfos[0].pageNo=='1'){
+		if(volunteerInfo[0].pageNo=='1'){
 			userInfoHtml = userInfoHtml+' class="am-disabled"'
 		}
 		userInfoHtml = userInfoHtml+'><a href="javascript:query(1)">«</a></li>'
-		if(userInfos[0].totalPages>0){
-			for(var i=1;i<=userInfos[0].totalPages;i++){
+		if(volunteerInfo[0].totalPages>0){
+			for(var i=1;i<=volunteerInfo[0].totalPages;i++){
 				userInfoHtml = userInfoHtml+'<li'
-				if(i==userInfos[0].pageNo){
+				if(i==volunteerInfo[0].pageNo){
 					userInfoHtml = userInfoHtml+' class="am-active"'
 				+'><a href="javascript:query('+i+')">'+i+'</a></li>'
 				}
@@ -328,10 +323,10 @@ function createUserInfoBoxes(userInfos){
 			userInfoHtml = userInfoHtml+'<li class="am-active"><a href="javascript:query(1)">1</a></li>'
 		}
 		userInfoHtml = userInfoHtml+'<li'
-		if(userInfos[0].pageNo==userInfos[0].totalPages){
+		if(volunteerInfo[0].pageNo==volunteerInfo[0].totalPages){
 			userInfoHtml = userInfoHtml+' class="am-disabled"'
 		}
-		userInfoHtml = userInfoHtml+'><a href="javascript:query('+userInfos[0].totalPages+')">»</a></li>'
+		userInfoHtml = userInfoHtml+'><a href="javascript:query('+volunteerInfo[0].totalPages+')">»</a></li>'
 		+'   </ul>'
 		+' </div>'
 		+'</div>'

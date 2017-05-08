@@ -80,4 +80,11 @@ public class VolunteerServiceImpl extends GenericServiceImpl<Volunteer, String> 
 		return this.volunteerMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<Volunteer> selecyByIds(List<String> volunteerIds) {
+		VolunteerExample example = new VolunteerExample();
+		example.createCriteria().andIsValidEqualTo(EnumBool.YES.getCode()).andVolunteerIdIn(volunteerIds);
+		return this.volunteerMapper.selectByExample(example);
+	}
+
 }

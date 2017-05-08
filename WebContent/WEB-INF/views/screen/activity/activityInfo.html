@@ -1,0 +1,45 @@
+<!-- header start -->
+#front_header
+<!-- header end -->
+<hr>
+
+<!-- nav start -->
+#front_nav($!keyword)
+<!-- nav end -->
+<hr>
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed blog-content">
+	<div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>$!{activity.activityName}</span></h2>
+            <p>$!{activity.activityDate}</p>
+        	<p>$!{activity.activityAddress}</p>
+        </div>
+
+
+    <h1>参加成员:</h1>
+        <table class="am-table am-table-bordered">
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th>手机号</th>
+        </tr>
+    </thead>
+    <tbody>
+    #foreach($volunteer in $volunteerList)
+    	<tr>
+            <td>$!{volunteer.volunteerName}</td>
+            <td>$!{volunteer.mobile}</td>
+        </tr>
+    #end
+    </tbody>
+</table>
+
+</div>
+<!-- content end -->
+
+#front_footer
+  <script type="text/javascript">
+$(function(){
+  $("#searchForm").attr("action","$!{rc.contextPath}/index.html")
+});
+</script>

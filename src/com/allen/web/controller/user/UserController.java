@@ -368,7 +368,7 @@ public class UserController extends GenericController {
 			model.addAttribute("error", "用户名或密码错误 ！");
 			return "/login";
 		}
-		return "redirect:/index.html";
+		return "redirect:/admin/index.html";
 	}
 	
 	

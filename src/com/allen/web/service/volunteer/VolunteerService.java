@@ -37,4 +37,15 @@ public interface VolunteerService extends GenericService<Volunteer, String>{
 	* @throws
 	 */
 	List<Volunteer> selectBySearching(Volunteer volunteer);
+	
+	/**
+	 * 
+	* @Title: selecyByIds 
+	* @Description: 按id数组查询
+	* @param @param volunteerIds
+	* @param @return    设定文件 
+	* @return List<Volunteer>    返回类型 
+	* @throws
+	 */
+	List<Volunteer> selecyByIds(List<String> volunteerIds);
 }

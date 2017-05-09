@@ -13,17 +13,19 @@
         <h1 class="blog-text-center">-- 我们的活动 --</h1>
         <div class="timeline-year">
         	#foreach($mainMap in $activityMap.entrySet())
+        		<br>
         		<hr>
         		<h1>$mainMap.key</h1>
                 <ul>
         		#foreach($subMap in $mainMap.value.entrySet())
         		<br>
+        		<hr>
         		<h3>$subMap.key</h3>
         		<hr>
         		<li>
                    #foreach($item in $subMap.value)
-                   	<span class="am-u-sm-4 am-u-md-2 timeline-span">$!item.activityDate</span>
-                   	<span class="am-u-sm-8 am-u-md-6"><a href="${rc.contextPath}/activity/${item.activityId}.html">$!item.activityName</a></span>
+                   	<span class="am-u-md-4 timeline-span">$!item.activityDate</span>
+                   	<span class="am-u-md-8"><a href="${rc.contextPath}/activity/${item.activityId}.html">$!item.activityName</a></span>
                    #end
                 </li>
         		#end

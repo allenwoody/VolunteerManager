@@ -174,13 +174,11 @@ public class UserServiceImpl extends GenericServiceImpl<User, String> implements
 //		}
 		if (StringUtils.isNotBlank(keyword)) {
 			criteria.andUsernameLike("%"+keyword+"%");
-		}
-		com.allen.web.model.UserExample.Criteria criteria2 = example.createCriteria();
-		criteria2.andIsValidEqualTo(EnumBool.YES.getCode());
-		if (StringUtils.isNotBlank(keyword)) {
+			com.allen.web.model.UserExample.Criteria criteria2 = example.createCriteria();
+			criteria2.andIsValidEqualTo(EnumBool.YES.getCode());
 			criteria2.andLoginnameLike("%"+keyword+"%");
+			example.or(criteria2 );
 		}
-		example.or(criteria2 );
 		example.setOrderByClause("loginname");
 		return this.userMapper.selectByExample(page, example);
 	}

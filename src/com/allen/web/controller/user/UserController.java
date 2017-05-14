@@ -195,7 +195,7 @@ public class UserController extends GenericController {
 		model.setUserId(userId);
 		model.setPassword(MD5Util.getEncryptedPwd(password));
 		this.userService.update(model);
-		return "redirect:/index.html";
+		return "redirect:/admin/index.html";
 	}
 	
 	/**
@@ -340,9 +340,9 @@ public class UserController extends GenericController {
 			if (subject.isAuthenticated()) {
 				/*判断是否初始密码，若是则跳转至修改密码*/
 				if(user.getPassword().equals(Const.INITIAL_PASSWORD)){
-					return "redirect:/setPassword.html";
+					return "redirect:/admin/setPassword.html";
 				}
-				return "redirect:/index.html";
+				return "redirect:/admin/index.html";
 			}
 			if (result.hasErrors()) {
 				model.addAttribute("error", "参数错误！");
@@ -361,7 +361,7 @@ public class UserController extends GenericController {
 			request.getSession().setAttribute("currentUser", authUserInfo.getUsername());
 			/*判断是否初始密码，若是则跳转至修改密码*/
 			if(user.getPassword().equals(Const.INITIAL_PASSWORD)){
-				return "redirect:/setPassword.html";
+				return "redirect:/admin/setPassword.html";
 			}
 		} catch (AuthenticationException e) {
 			// 身份验证失败

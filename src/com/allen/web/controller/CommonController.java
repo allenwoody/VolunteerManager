@@ -103,7 +103,7 @@ public class CommonController extends GenericController{
     	return "/adminIndex";
     }
 
-    @RequestMapping("/setPassword")
+    @RequestMapping("/admin/setPassword")
 	public String setPassword(ModelMap map) {
 		map.put("userId", this.getLoginUser().getUserId());
 		return "/setPassword";
